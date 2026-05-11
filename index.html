@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>巴菲特知识库 — 奥马哈书房</title>
+<style>
+/* ===== Variables ===== */
+:root{
+  --bg-deep:#0f0d0a;
+  --bg-sidebar:#161210;
+  --bg-surface:#1c1612;
+  --bg-elevated:#241e18;
+  --bg-hover:#2e261e;
+  --border:#3a3028;
+  --border-subtle:#28211b;
+  --text-title:#eee4d6;
+  --text-body:#dccfc0;
+  --text-secondary:#ad9e8e;
+  --text-muted:#6e5f51;
+  --accent:#c9a84c;
+  --accent-hover:#ddbc5a;
+  --accent-subtle:rgba(201,168,76,0.10);
+  --accent-glow:rgba(201,168,76,0.06);
+  --green:#2d6a4f;
+  --shadow:rgba(0,0,0,0.5);
+  --sw:300px;
+  --hh:58px;
+  --r:6px;
+  --t:0.25s cubic-bezier(0.4,0,0.2,1);
+  --ff-serif:Georgia,"Noto Serif SC","Source Han Serif SC",STSong,"宋体",serif;
+  --ff-sans:system-ui,-apple-system,"PingFang SC","Microsoft YaHei","微软雅黑",sans-serif;
+}
+
+/* ===== Reset ===== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;font-family:var(--ff-sans);background:var(--bg-deep);color:var(--text-body);line-height:1.8;overflow:hidden;font-size:15.5px}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat:repeat;background-size:256px 256px}
+
+/* ===== Layout ===== */
+.app{display:flex;flex-direction:column;height:100vh}
+.mc{display:flex;flex:1;overflow:hidden}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
+
+/* ===== Header ===== */
+.hd{height:var(--hh);background:var(--bg-sidebar);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;z-index:10;
+  position:relative}
+.hd::after{content:'';position:absolute;bottom:-1px;left:20%;right:20%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.3}
+.hd-title{font-size:16px;font-weight:700;color:var(--accent);white-space:nowrap;letter-spacing:1px;
+  font-family:var(--ff-serif);position:relative}
+.hd-title span{color:var(--text-muted);font-weight:400;font-size:12px;letter-spacing:0;margin-left:6px}
+
+/* Tabs */
+.tabs{display:flex;gap:2px;background:var(--bg-deep);border-radius:var(--r);padding:2px;flex-shrink:0}
+.tab{padding:5px 14px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:500;
+  color:var(--text-muted);border:none;background:transparent;transition:all var(--t);white-space:nowrap;
+  position:relative}
+.tab:hover{color:var(--text-secondary)}
+.tab.act{background:var(--accent);color:var(--bg-deep);font-weight:600}
+.tab.act:hover{background:var(--accent-hover);color:var(--bg-deep)}
+
+/* Hamburger menu — desktop hidden, mobile shown */
+.hm-btn{display:none;background:none;border:none;color:var(--text-muted);font-size:20px;
+  cursor:pointer;padding:2px 6px;border-radius:4px;transition:color var(--t)}
+.hm-btn:hover{color:var(--text-title)}
+.sb-ov{display:none}
+
+/* Search */
+.hd-search{flex:1;max-width:380px;position:relative}
+.hd-search .si{position:absolute;left:11px;top:50%;transform:translateY(-50%);
+  color:var(--text-muted);font-size:11px;pointer-events:none;opacity:.6;
+  font-family:var(--ff-sans)}
+.hd-search input{width:100%;padding:5px 12px 5px 30px;border-radius:20px;
+  border:1px solid var(--border-subtle);background:var(--bg-deep);color:var(--text-body);
+  font-size:12.5px;font-family:var(--ff-sans);outline:none;
+  transition:all var(--t)}
+.hd-search input:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-subtle)}
+.hd-search input::placeholder{color:var(--text-muted);font-size:12px}
+
+/* ===== Sidebar ===== */
+.sb{width:var(--sw);background:var(--bg-sidebar);border-right:1px solid var(--border-subtle);
+  display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;
+  background:linear-gradient(180deg,var(--bg-sidebar) 0%,var(--bg-deep) 100%)}
+.sbs{border-bottom:1px solid var(--border-subtle)}
+.sbsh{padding:12px 16px 10px;font-size:11px;font-weight:600;color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:1.2px;user-select:none;
+  display:flex;align-items:center;justify-content:space-between}
+.sbsh .ct{font-size:11px;color:var(--text-muted);text-transform:none;letter-spacing:0;
+  font-weight:400}
+.sbs-hd{cursor:pointer;transition:color var(--t);display:flex;align-items:center;gap:6px;width:100%}
+.sbs-hd:hover{color:var(--text-secondary)}
+.sbs-ar{font-size:9px;transition:transform .25s ease;opacity:.5;flex-shrink:0;line-height:1}
+.sbs-ar.ar{transform:rotate(90deg)}
+.sbs-bd{overflow:hidden;transition:max-height .35s ease}
+
+/* Year list */
+.yl{list-style:none;overflow-y:auto;flex:1;padding:4px 0}
+.yi{padding:9px 16px;cursor:pointer;font-size:14px;color:var(--text-secondary);
+  transition:all var(--t);border-left:2px solid transparent;
+  display:flex;align-items:center;justify-content:space-between;position:relative}
+.yi:hover{background:var(--accent-glow);color:var(--text-title);border-left-color:var(--accent)}
+.yi.act{color:var(--text-title);background:var(--accent-subtle);border-left-color:var(--accent);
+  font-weight:600}
+.yi.act::before{content:'';position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.yi .yt{display:flex;gap:5px;align-items:center;flex-shrink:0}
+.yi .ytd{width:7px;height:7px;border-radius:50%;display:inline-block;transition:transform var(--t)}
+.yi:hover .ytd{transform:scale(1.3)}
+.yi span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+
+/* Theme filter - Tag style */
+.tf{padding:8px 12px 10px}
+.tf-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding:0 4px}
+.tf-cnt{font-size:11px;color:var(--text-muted);font-weight:400}
+.tf-clr{font-size:11px;color:var(--text-muted);cursor:pointer;background:none;border:none;
+  padding:3px 8px;border-radius:3px;transition:all var(--t);font-family:var(--ff-sans)}
+.tf-clr:hover{color:var(--accent);background:var(--accent-subtle)}
+.tf-tg{display:flex;flex-wrap:wrap;gap:4px}
+.tt{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:16px;
+  font-size:12px;cursor:pointer;transition:all var(--t);user-select:none;
+  font-family:var(--ff-sans);font-weight:500;line-height:1.4;border:1px solid transparent}
+.tt:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+.tt.act{border-color:transparent}
+.tt:not(.act){background:transparent;border-color:var(--border);color:var(--text-secondary)}
+.tt:not(.act):hover{color:var(--text-body);border-color:var(--text-muted)}
+.tt .tt-d{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.tt .tt-c{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;
+  border-radius:8px;font-size:10px;padding:0 5px;margin-left:2px;font-weight:600}
+.tt.act .tt-c{background:rgba(0,0,0,0.2)}
+.tt:not(.act) .tt-c{background:var(--bg-elevated);color:var(--text-muted)}
+
+/* Bookmark panel */
+.bp{overflow-y:auto;max-height:180px;padding:4px 0}
+.bi{padding:8px 16px 8px 20px;cursor:pointer;font-size:13px;color:var(--text-secondary);
+  transition:all var(--t);border-left:2px solid var(--accent);margin:3px 8px;border-radius:0 4px 4px 0;
+  background:var(--accent-subtle)}
+.bi:hover{background:rgba(201,168,76,0.15);color:var(--text-title)}
+.bi .by{font-size:11px;color:var(--text-muted);margin-top:3px;display:flex;gap:4px;align-items:center}
+.be{padding:14px;text-align:center;color:var(--text-muted);font-size:13px;font-style:italic}
+#entity-section{overflow-y:auto;border-bottom:1px solid var(--border-subtle)}
+
+/* Entity filter */
+.ef-cat{font-size:11px;font-weight:600;padding:6px 4px 5px;letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.ef-cat::after{content:'';flex:1;height:1px;background:var(--border-subtle)}
+.tt-f{font-size:10px;opacity:.5;margin-left:3px;cursor:pointer;transition:all var(--t);line-height:1}
+.tt:hover .tt-f{opacity:1}
+.tt.act .tt-f{opacity:.8}
+
+/* Entity detail view */
+.ev{max-width:780px;margin:0 auto;animation:fi .5s ease}
+.ev-h{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.ev-b{display:inline-flex;padding:3px 12px;border-radius:12px;font-size:11px;font-weight:600;color:#fff;flex-shrink:0}
+.ev-h h1{font-size:28px;font-weight:700;color:var(--text-title);font-family:var(--ff-serif);letter-spacing:.5px;line-height:1.3}
+.ev-d{font-size:14px;color:var(--text-secondary);line-height:1.8;margin-bottom:16px;padding:14px 16px;background:var(--accent-glow);border-radius:var(--r);border-left:2px solid var(--accent);font-family:var(--ff-serif)}
+.ev-s{font-size:12px;color:var(--text-muted);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-subtle)}
+.ev-y{display:flex;flex-direction:column;gap:10px}
+.ev-c{background:var(--bg-elevated);border-radius:var(--r);border:1px solid var(--border-subtle);overflow:hidden;transition:all var(--t)}
+.ev-c:hover{border-color:var(--border)}
+.ev-ch{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;transition:background var(--t)}
+.ev-ch:hover{background:var(--bg-hover)}
+.ev-yb{display:inline-flex;align-items:center;justify-content:center;min-width:40px;padding:2px 10px;border-radius:10px;background:var(--accent);color:var(--bg-deep);font-size:11px;font-weight:700;flex-shrink:0}
+.ev-yt{flex:1;font-size:13px;color:var(--text-secondary);transition:color var(--t)}
+.ev-ch:hover .ev-yt{color:var(--text-title)}
+.ev-ar{font-size:14px;color:var(--text-muted);transition:transform var(--t)}
+.ev-ch:hover .ev-ar{transform:translateX(3px);color:var(--accent)}
+.ev-p{padding:6px 14px 8px 52px;font-size:12px;color:var(--text-muted);line-height:1.7;cursor:pointer;transition:all var(--t);border-top:1px solid var(--border-subtle);font-family:var(--ff-serif)}
+.ev-p:hover{background:var(--accent-glow);color:var(--text-secondary)}
+.ev-pl{display:inline-block;font-size:10px;color:var(--accent);font-family:var(--ff-sans);margin-right:4px;font-weight:600}
+
+/* ===== 关系图 ===== */
+.rg{max-width:860px;margin:0 auto;animation:fi .5s ease}
+.rg-b{text-align:center;padding:32px 20px 24px;margin-bottom:36px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,0.08) 0%,transparent 70%);
+  border-bottom:1px solid var(--border-subtle)}
+.rg-b .rg-av{width:72px;height:72px;border-radius:50%;background:var(--accent);
+  display:inline-flex;align-items:center;justify-content:center;font-size:28px;
+  margin-bottom:12px;box-shadow:0 0 30px rgba(201,168,76,0.15);overflow:hidden}
+.rg-b h2{font-size:26px;font-family:var(--ff-serif);color:var(--accent);margin-bottom:6px;letter-spacing:1px}
+.rg-b p{font-size:13px;color:var(--text-secondary);max-width:500px;margin:0 auto;line-height:1.8}
+.rg-g{margin-bottom:28px}
+.rg-gh{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:0 4px}
+.rg-gh span{font-size:12px;font-weight:600;color:var(--text-muted);letter-spacing:.5px}
+.rg-gh::after{content:'';flex:1;height:1px;background:var(--border-subtle)}
+.rg-row{display:flex;flex-wrap:wrap;gap:8px}
+.rg-n{flex:1;min-width:240px;max-width:420px;padding:12px 14px;border-radius:var(--r);
+  background:var(--bg-elevated);border:1px solid var(--border-subtle);cursor:pointer;
+  transition:all var(--t);position:relative;display:flex;align-items:flex-start;gap:12px}
+.rg-n:hover{transform:translateY(-2px);border-color:var(--accent);
+  box-shadow:0 4px 16px rgba(0,0,0,0.3);background:var(--bg-hover)}
+.rg-av{width:44px;height:44px;border-radius:50%;flex-shrink:0;overflow:hidden;
+  background:var(--bg-deep);display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--border-subtle);font-size:15px;font-weight:700;color:var(--text-muted)}
+.rg-av img{width:100%;height:100%;object-fit:cover;display:none}
+.rg-in{width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:700}
+.rg-txt{flex:1;min-width:0}
+.rg-nm{font-size:14px;font-weight:600;color:var(--text-title);margin-bottom:4px;
+  font-family:var(--ff-serif)}
+.rg-nr{font-size:12px;color:var(--text-secondary);line-height:1.6}
+
+/* ===== Content Area ===== */
+.ctn{flex:1;overflow-y:auto;padding:32px 40px;background:
+  radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.02) 0%, transparent 60%),
+  var(--bg-surface);min-height:0}
+.ctn::before{content:'';position:fixed;top:0;left:var(--sw);right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.15;pointer-events:none;z-index:1}
+
+/* ===== Welcome Page ===== */
+.wl{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;text-align:center;color:var(--text-secondary);animation:fi .6s ease}
+.wl h2{font-size:30px;font-family:var(--ff-serif);color:var(--accent);margin-bottom:12px;
+  letter-spacing:2px;font-weight:700}
+.wl h2 small{display:block;font-size:13px;color:var(--text-muted);font-family:var(--ff-sans);
+  font-weight:400;letter-spacing:1px;margin-top:6px}
+.wl p{font-size:14px;line-height:1.9;max-width:400px;margin-bottom:24px;color:var(--text-secondary)}
+.ws{display:flex;gap:32px;margin-top:4px}
+.wst{text-align:center;padding:16px 24px;background:var(--bg-elevated);border-radius:var(--r);
+  border:1px solid var(--border-subtle);min-width:120px;transition:all var(--t)}
+.wst:hover{border-color:var(--accent);transform:translateY(-2px);
+  box-shadow:0 4px 20px var(--shadow)}
+.wsn{font-size:32px;font-weight:700;color:var(--accent);font-family:var(--ff-serif);
+  line-height:1.2}
+.wsl{font-size:12px;color:var(--text-muted);margin-top:4px;letter-spacing:.5px}
+
+/* ===== Letter/Meeting View ===== */
+.lv{max-width:780px;margin:0 auto;animation:fi .5s ease}
+@keyframes fi{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.lh{margin-bottom:28px;padding-bottom:20px;border-bottom:2px solid var(--border-subtle);
+  position:relative}
+.lh::after{content:'';position:absolute;bottom:-2px;left:0;width:60px;height:2px;
+  background:var(--accent)}
+.lh h1{font-size:24px;font-weight:700;line-height:1.4;margin-bottom:12px;
+  color:var(--text-title);font-family:var(--ff-serif);letter-spacing:.5px}
+.lm{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lyb{display:inline-flex;align-items:center;justify-content:center;min-width:44px;
+  padding:3px 12px;border-radius:12px;background:var(--accent);color:var(--bg-deep);
+  font-size:11px;font-weight:700;letter-spacing:.5px;font-family:var(--ff-sans)}
+.ltt{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;color:var(--text-title);
+  cursor:pointer;transition:all var(--t);font-family:var(--ff-sans);font-weight:500}
+.ltt:hover{opacity:.85;transform:translateY(-1px)}
+.lsum{margin-top:12px;font-size:13px;color:var(--text-secondary);font-style:italic;
+  line-height:1.7;padding:12px 16px;background:var(--accent-glow);border-radius:var(--r);
+  border-left:2px solid var(--accent);font-family:var(--ff-serif);display:flex;flex-direction:column;gap:4px}
+.lsum-lb{font-size:11px;font-weight:600;color:var(--accent);font-style:normal;font-family:var(--ff-sans);
+  letter-spacing:.5px}
+.lsum-ct{white-space:pre-wrap;font-size:14px;color:var(--text-secondary);font-style:italic;line-height:1.8}
+.meeting-meta{font-size:12px;color:var(--text-muted);margin-top:8px;display:flex;align-items:center;gap:6px}
+
+/* ===== Paragraph ===== */
+.par{position:relative;padding:7px 12px;margin:0 -12px;border-radius:4px;
+  transition:background var(--t);line-height:2;font-size:16px;text-align:justify;
+  font-family:var(--ff-serif);border-left:2px solid transparent}
+.par:hover{background:var(--accent-glow);border-left-color:transparent}
+.par.bm{background:var(--accent-subtle);border-left-color:var(--accent);padding-left:32px}
+.par.bm:hover{background:rgba(201,168,76,0.14)}
+.pt{transition:color var(--t)}
+.par:hover .pt{color:var(--text-title)}
+
+/* Paragraph actions */
+.pa{position:absolute;right:8px;top:3px;display:none;gap:2px;
+  background:var(--bg-elevated);border:1px solid var(--border);
+  border-radius:5px;padding:2px;box-shadow:0 4px 12px var(--shadow);
+  backdrop-filter:blur(8px);z-index:5}
+.par:hover .pa{display:flex}
+.pa button{background:none;border:none;color:var(--text-muted);width:28px;height:28px;
+  border-radius:3px;cursor:pointer;font-size:12px;display:flex;align-items:center;
+  justify-content:center;transition:all var(--t);position:relative}
+.pa button:hover{background:var(--bg-hover);color:var(--text-body)}
+.pa button.act{color:var(--accent)}
+.pa button.act:hover{color:var(--accent-hover)}
+
+/* Note */
+.ne{margin:4px 0 8px 12px;display:none}
+.ne.vis{display:block;animation:fi .25s ease}
+.ne textarea{width:100%;min-height:54px;padding:8px 12px;border-radius:5px;
+  border:1px solid var(--border);background:var(--bg-deep);color:var(--text-body);
+  font-size:12.5px;font-family:var(--ff-sans);resize:vertical;outline:none;
+  transition:border var(--t);line-height:1.6}
+.ne textarea:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-subtle)}
+.ne .na{display:flex;justify-content:flex-end;gap:6px;margin-top:6px}
+.ne .na button{padding:4px 14px;border-radius:4px;border:none;font-size:11px;font-weight:500;
+  cursor:pointer;transition:all var(--t)}
+.ne .ns{background:var(--accent);color:var(--bg-deep)}
+.ne .ns:hover{background:var(--accent-hover)}
+.ne .nc{background:transparent;color:var(--text-secondary);border:1px solid var(--border)}
+.ne .nc:hover{color:var(--text-body);border-color:var(--text-muted)}
+.ni{margin-top:3px;padding:5px 10px;background:var(--accent-subtle);border-radius:3px;
+  font-size:12px;color:var(--text-secondary);border-left:2px solid var(--accent);
+  cursor:pointer;transition:all var(--t);line-height:1.5}
+.ni:hover{background:rgba(201,168,76,0.15);color:var(--text-body)}
+
+/* ===== Search Results ===== */
+.sr{max-width:780px;margin:0 auto;animation:fi .5s ease}
+.sr h2{font-size:16px;margin-bottom:20px;color:var(--text-title);font-weight:600}
+.sr .rc{color:var(--text-muted);font-size:13px;font-weight:400}
+.srg{margin-bottom:24px;border-left:2px solid var(--border-subtle);padding-left:16px}
+.srh{font-size:15px;font-weight:600;color:var(--accent);cursor:pointer;padding:6px 0;
+  transition:color var(--t);font-family:var(--ff-serif);letter-spacing:.3px}
+.srh:hover{color:var(--accent-hover)}
+.srm{padding:8px 14px;margin:5px 0;background:var(--bg-elevated);border-radius:var(--r);
+  border-left:2px solid var(--border);font-size:13px;line-height:1.7;
+  cursor:pointer;transition:all var(--t);font-family:var(--ff-serif)}
+.srm:hover{background:var(--bg-hover);border-left-color:var(--accent)}
+.srm .mh{background:rgba(201,168,76,0.2);color:var(--accent-hover);padding:1px 3px;border-radius:2px}
+.se{text-align:center;padding:60px 20px;color:var(--text-muted);animation:fi .5s ease}
+.se strong{color:var(--accent)}
+
+/* ===== Light Mode ===== */
+html.light{--bg-deep:#f5f0eb;--bg-sidebar:#ede6de;--bg-surface:#faf7f3;
+  --bg-elevated:#f0e9e1;--bg-hover:#e8dfd5;--border:#d4c9bd;--border-subtle:#ddd3c7;
+  --text-title:#2c241c;--text-body:#3d342b;--text-secondary:#6b5f53;--text-muted:#9a8c7d;
+  --accent:#b8953a;--accent-hover:#a07f30;
+  --accent-subtle:rgba(184,149,58,0.12);--accent-glow:rgba(184,149,58,0.07);
+  --shadow:rgba(0,0,0,0.08)}
+html.light body::after{opacity:.015}
+html.light .hd::after{opacity:.5}
+html.light .ctn::before{opacity:.3}
+html.light .lsum{background:var(--accent-glow)}
+
+/* ===== Theme Toggle ===== */
+.th-btn{background:none;border:none;color:var(--text-muted);width:32px;height:32px;
+  border-radius:50%;cursor:pointer;font-size:15px;display:flex;align-items:center;
+  justify-content:center;transition:all var(--t);flex-shrink:0}
+.th-btn:hover{background:var(--accent-glow);color:var(--accent)}
+
+/* ===== Reading Progress Bar ===== */
+.prg-bar{position:fixed;top:0;left:var(--sw);right:0;height:2px;z-index:100;pointer-events:none}
+.prg-bar-in{height:100%;background:var(--accent);width:0%;transition:width .1s linear}
+
+/* ===== Content Stats ===== */
+.lstats{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
+.lstats span{font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:5px}
+.lstats .ls-d{width:3px;height:3px;border-radius:50%;background:var(--text-muted);opacity:.4}
+
+/* ===== Year Navigation ===== */
+.ynav{display:flex;justify-content:space-between;margin-top:40px;padding-top:24px;
+  border-top:1px solid var(--border-subtle);gap:12px}
+.ynav a{display:flex;align-items:center;gap:8px;padding:12px 18px;border-radius:var(--r);
+  background:var(--bg-elevated);border:1px solid var(--border-subtle);color:var(--text-secondary);
+  text-decoration:none;font-size:13px;transition:all var(--t);flex:1;cursor:pointer}
+.ynav a:hover{background:var(--bg-hover);border-color:var(--accent);color:var(--text-title)}
+.ynav .yn-nx{text-align:right;flex-direction:row-reverse}
+.ynav .yn-em{font-size:10px;color:var(--text-muted)}
+.ynav .yn-yr{font-weight:600}
+.ynav .yn-d{flex:1}
+.ynav .yn-ar{font-size:16px;opacity:.5;transition:transform var(--t)}
+.ynav a:hover .yn-ar{opacity:1;transform:translateX(2px)}
+.ynav .yn-nx:hover .yn-ar{transform:translateX(-2px)}
+
+/* ===== Back to Top ===== */
+.btt{position:fixed;bottom:28px;right:28px;width:38px;height:38px;border-radius:50%;
+  background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-muted);
+  cursor:pointer;display:none;align-items:center;justify-content:center;font-size:17px;
+  transition:all var(--t);z-index:50;box-shadow:0 2px 12px var(--shadow)}
+.btt.vis{display:flex}
+.btt:hover{background:var(--bg-hover);color:var(--accent);border-color:var(--accent);
+  transform:translateY(-2px);box-shadow:0 4px 16px var(--shadow)}
+[onclick],.tab,.tt,.yi,.srm,.srh,.rg-n,.ev-ch,.ev-p,.bmb,.ntb,.bi,.ynav a{touch-action:manipulation}
+
+/* ===== Animations ===== */
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* ===== Responsive ===== */
+@media(max-width:768px){
+  .hm-btn{display:inline-flex;align-items:center}
+  .sb{display:none;position:fixed;top:0;left:0;bottom:0;z-index:100;width:260px;
+    box-shadow:4px 0 30px rgba(0,0,0,0.5);transform:translateX(-100%);
+    transition:transform .3s ease}
+  .sb.open{display:flex;transform:translateX(0)}
+  .sb-ov{display:none;position:fixed;inset:0;z-index:99;background:rgba(0,0,0,0.5);
+    opacity:0;transition:opacity .3s ease}
+  .sb-ov.open{display:block;opacity:1}
+  .ctn{padding:22px 18px}
+  .lh h1{font-size:22px}
+  .ws{flex-direction:column;gap:16px}
+  .hd-title{font-size:14px}
+  .hd-title span{display:none}
+  .yi{font-size:13px;padding:7px 14px}
+  .tt{font-size:11px;padding:3px 10px}
+  .bi{font-size:12px;padding:6px 12px 6px 16px}
+  .par{font-size:15px;line-height:1.85}
+  .lsum-ct{font-size:13.5px}
+  .ev-d{font-size:14px}
+  .wst{padding:14px}
+}
+@media(max-width:480px){
+  .ctn{padding:16px}
+  .hd-title{font-size:0;width:0;overflow:hidden;margin:0;flex-shrink:0}
+  .par{font-size:14.5px;line-height:1.8}
+  .hd-search{flex:1;max-width:none;min-width:60px}
+  .hd-search .si{left:8px}
+  .hd-search input{font-size:13px;padding:6px 8px 6px 26px}
+  .hd{padding:0 4px;gap:2px}
+  .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:5px 8px;font-size:10px;white-space:nowrap}
+  .th-btn{font-size:14px;padding:3px 5px;flex-shrink:0}
+  .prg-bar{left:0!important}
+  .btt{bottom:16px;right:16px;width:38px;height:38px;font-size:16px}
+  .ynav{flex-direction:column}
+  .ev-ch{padding:10px 12px}
+  .ev-yb{font-size:14px;min-width:40px}
+  .ev-p{font-size:12px;padding:6px 12px}
+  .ev-d{font-size:13.5px}
+  .ev-h h1{font-size:18px}
+  .pa button{width:36px;height:36px;font-size:14px}
+  .pa{gap:4px}
+  .yn-pr,.yn-nx{padding:10px 16px}
+  .tt{padding:4px 12px;font-size:11px}
+}
+/* ===== 数据统计 ===== */
+.dash{max-width:1200px;margin:0 auto;padding:8px 4px;animation:fi .5s ease}
+.dash-g{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:20px}
+.dash-c{flex:1;min-width:280px;background:var(--bg-elevated);border-radius:var(--r);
+  border:1px solid var(--border-subtle);padding:16px 20px;transition:all var(--t)}
+.dash-c:hover{border-color:var(--accent)}
+.dash-c .dc-v{font-size:28px;font-weight:700;color:var(--accent);font-family:var(--ff-serif);line-height:1.2}
+.dash-c .dc-l{font-size:12px;color:var(--text-muted);margin-top:2px}
+.dash-chart{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r);
+  padding:16px;margin-bottom:16px}
+.dash-chart h3{font-size:14px;font-weight:600;color:var(--text-title);margin-bottom:8px;padding-left:4px}
+.dash-chart .dc-c{width:100%;height:320px}
+@media(max-width:768px){
+  .dash-g{flex-wrap:wrap}
+  .dash-c{min-width:140px;flex:1 1 calc(50% - 16px);padding:12px 14px}
+  .dash-chart .dc-c{height:260px}
+}
+/* ===== Content Highlight ===== */
+.hl-spk{color:var(--accent);font-weight:700;font-style:normal}
+.hl-num{font-weight:700;color:var(--text-title)}
+.hl-q{color:#d4c5a0;font-style:italic}
+.hl-term{color:var(--accent-hover);font-weight:600;background:var(--accent-subtle);padding:0 3px;border-radius:2px;cursor:pointer}
+.hl-term:hover{opacity:0.7}
+.hl-ent{cursor:pointer;color:var(--text-secondary);border-bottom:1px dashed var(--text-muted);transition:color var(--t)}
+.hl-ent:hover{color:var(--accent)}
+.hl-hd-s{color:var(--accent);font-weight:700;font-style:normal}
+.par .hl-spk{font-size:14px;letter-spacing:.3px}
+/* Light mode overrides — darker for readability */
+html.light .hl-spk{color:#6b4c00}
+html.light .hl-hd-s{color:#6b4c00}
+html.light .hl-q{color:#7a6b50}
+html.light .hl-term{color:#5a3f00;background:rgba(184,149,58,0.25)}
+html.light .hl-ent{color:#6b5f53;border-bottom-color:#b5a696}
+html.light .hl-num{color:#2c241c}
+@media print{
+  .sb,.hd{display:none!important}
+  .ctn{overflow:visible!important;padding:0!important;background:white!important}
+  .pa{display:none!important}
+  .par.bm{border-left:2px solid #999;padding-left:10px}
+  .par{color:#000!important;font-size:12pt!important}
+  .par:hover .pt{color:#000!important}
+  body{overflow:visible!important}
+  body::after{display:none!important}
+  .lsum{background:none!important}
+}
+
+/* ===== 知识图谱 ===== */
+.kg{width:100%;height:100%;min-height:500px;animation:fi .5s ease;position:relative}
+.kg-container{width:100%;height:calc(100vh - var(--hh) - 40px);min-height:500px}
+@media(max-width:768px){
+  .kg-container{height:calc(100vh - var(--hh) - 80px);min-height:350px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="hd">
+    <div class="hd-title">奥马哈书房<span>Buffett Knowledge Base</span></div>
+    <div class="tabs" id="tabs">
+      <button class="tab act" data-mode="letters">📖 致股东的信</button>
+      <button class="tab" data-mode="meetings">🎤 股东大会</button>
+<button class="tab" data-mode="relations">🔗 关系图</button>
+<button class="tab" data-mode="knowledgegraph">🌐 知识图谱</button>
+<button class="tab" data-mode="stats">📊 数据统计</button>
+    </div>
+    <button class="hm-btn" id="hm-btn" title="菜单">☰</button>
+    <div class="hd-search">
+      <span class="si">⌕</span>
+      <input type="text" id="search-input" placeholder="搜索当前内容… (Ctrl+F)" autocomplete="off">
+    </div>
+    <button class="th-btn" id="th-btn" title="切换主题">☀️</button>
+    <button class="th-btn" id="rand-btn" title="随机阅读">🎲</button>
+  </header>
+  <div class="mc">
+    <div class="prg-bar"><div class="prg-bar-in" id="prg-bar-in"></div></div>
+    <div class="sb-ov" id="sb-ov"></div>
+    <aside class="sb" id="sb">
+      <div class="sbs" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+        <div class="sbsh"><span id="sidebar-title">📖 致股东的信</span><span class="ct" id="sidebar-count"></span></div>
+        <ul id="year-list" class="yl"></ul>
+      </div>
+      <div class="sbs" id="theme-section">
+        <div class="sbsh sbs-hd"><span>🏷️ 主题筛选</span><span class="sbs-ar">▶</span></div>
+        <div class="sbs-bd" id="theme-section-bd"><div id="theme-filter" class="tf"></div></div>
+      </div>
+      <div class="sbs" id="entity-section" style="display:none;">
+        <div class="sbsh sbs-hd"><span>🔗 实体关联</span><span class="sbs-ar">▶</span></div>
+        <div class="sbs-bd" id="entity-section-bd"><div id="entity-filter" class="tf"></div></div>
+      </div>
+      <div class="sbs" id="bookmark-section">
+        <div class="sbsh sbs-hd"><span>⭐ 书签</span><span class="sbs-ar">▶</span></div>
+        <div class="sbs-bd" id="bookmark-section-bd"><div id="bookmark-list" class="bp"></div></div>
+      </div>
+      <div class="sbs" id="history-section">
+        <div class="sbsh sbs-hd"><span>🕐 最近阅读</span><span class="sbs-ar">▶</span></div>
+        <div class="sbs-bd" id="history-section-bd"><div id="history-list" class="bp"></div></div>
+      </div>
+    </aside>
+    <main id="content" class="ctn">
+      <div class="wl">
+        <h2 id="welcome-title">奥马哈书房<small>Warren Buffett Knowledge Base</small></h2>
+        <p id="welcome-desc">收录沃伦·巴菲特历年致股东的信件（1957–2025）与伯克希尔股东大会问答实录（2000–2023），供深度阅读、全文检索与学习笔记。</p>
+        <div class="ws">
+          <div class="wst"><div class="wsn" id="stat-letters">0</div><div class="wsl">致股东的信</div></div>
+          <div class="wst"><div class="wsn" id="stat-meetings">0</div><div class="wsl">股东大会</div></div>
+          <div class="wst"><div class="wsn" id="stat-themes">0</div><div class="wsl">主题分类</div></div>
+        </div>
+      </div>
+    </main>
+    <button class="btt" id="btt" title="回到顶部">↑</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script src="data.js"></script>
+<script src="meetings_data.js"></script>
+<script>
+// ===== 主题 =====
+const THEMES = {
+  "投资理念":{color:"#c9a84c",text:"#1a1511",desc:"价值投资、护城河、安全边际、长期持有"},
+  "公司治理":{color:"#2d6a4f",desc:"管理层激励、董事会、股东关系"},
+  "经济观点":{color:"#7f4f24",desc:"宏观经济、通货膨胀、利率"},
+  "管理智慧":{color:"#a67c52",desc:"用人、企业文化、决策原则"},
+  "收购与估值":{color:"#6b4c3b",desc:"收购标准、企业估值方法"},
+  "保险业务":{color:"#4a6fa5",desc:"保险承保、浮存金、再保险"},
+  "会计与财报":{color:"#8c6c4a",desc:"会计政策、财务报表解读"},
+  "税务":{color:"#b5651d",desc:"税率、递延税项、税制改革"},
+};
+
+// ===== 实体数据（人物/公司/关键词） =====
+const ENTITIES = {
+  "人物":{color:"#a67c52",items:[
+    {name:"查理·芒格",kw:["芒格","Munger","Charlie"],desc:"伯克希尔副董事长（1924-2023），巴菲特的长期搭档与挚友。推动了巴菲特从\"雪茄烟蒂\"向\"以合理价格买入伟大企业\"的投资转型。创立了\"多元思维模型\"（Mental Models）和\"Lollapalooza效应\"等投资理念，著有《穷查理宝典》（Poor Charlie's Almanack）。被誉为\"巴菲特的沉默合伙人\"和\"现代投资智慧的化身\"。"},
+    {name:"本杰明·格雷厄姆",kw:["格雷厄姆","Graham","《证券分析》"],desc:"价值投资之父（1894-1976），巴菲特的导师。哥伦比亚大学教授，著有\"投资圣经\"《证券分析》（Security Analysis）和《聪明的投资者》（The Intelligent Investor）。提出了\"安全边际\"（Margin of Safety）和\"市场先生\"（Mr. Market）两大核心概念，奠定了价值投资理论的基石。巴菲特称其《聪明的投资者》第8章和第20章\"改变了我的一生\"。"},
+    {name:"凯瑟琳·格雷厄姆",kw:["凯·格雷厄姆","Katharine Graham"],desc:"《华盛顿邮报》发行人（1917-2001），在其领导下《华盛顿邮报》揭露了五角大楼文件案并率先报道水门事件，捍卫了新闻自由。巴菲特长期持有华盛顿邮报股票并担任董事18年，两人保持了数十年的深厚友谊。凭自传《个人历史》（Personal History）获普利策奖。"},
+    {name:"汤姆·墨菲",kw:["汤姆·墨菲","Tom Murphy","Murphy"],desc:"首都城市/ABC公司CEO（1925-2022），巴菲特眼中\"全美最佳企业管理者\"。以超凡的资本配置和诚信品格著称，先后收购了ABC电视网和ESPN。巴菲特在致股东信中多次引用其\"指名道姓表扬，泛泛批评\"的管理格言，称其\"用拇指就能管理一家大公司\"。"},
+    {name:"阿吉特·贾因",kw:["阿吉特","Ajit Jain","Jain"],desc:"伯克希尔保险业务副主席（1951-），被誉为\"伯克希尔的秘密武器\"。1986年入职伯克希尔，从零开始建立了全球最大的再保险业务。在超大规模和超复杂风险承保方面无人能及，巴菲特开玩笑道：\"如果我和阿吉特同时落水只能救一个——救阿吉特。\""},
+    {name:"卢·辛普森",kw:["卢·辛普森","Lou Simpson"],desc:"GEICO投资经理（1979-2010），20年间创造了年化约20%的投资回报率，大幅跑赢标普500指数。巴菲特对其投资能力极度信任，是伯克希尔体系内极少数被授权独立管理投资组合的外部经理。在伯克希尔2011年致股东信中，巴菲特称其\"拥有出色的长期投资记录\"。"},
+    {name:"格雷格·阿贝尔",kw:["格雷格·阿贝尔","Greg Abel","Abel"],desc:"伯克希尔副董事长（1962-），巴菲特选定的下一任CEO接班人。负责伯克希尔能源业务（BHE），主导了多次重大能源收购和可再生能源转型。被巴菲特称为\"世界级的管理者\"，在伯克希尔内部威信极高，已成为伯克希尔日常运营的核心人物。"},
+    {name:"比尔·盖茨",kw:["比尔·盖茨","Bill Gates","Gates"],desc:"微软联合创始人（1955-），巴菲特的挚友。两人自1991年相识后成为忘年之交，通过盖茨基金会合作开展全球慈善事业。巴菲特承诺将其99%以上的财富捐给盖茨基金会，被誉为\"人类历史上最伟大的慈善捐赠\"。巴菲特称盖茨为\"我最聪明的朋友\"，二人每年都会一起打桥牌和高尔夫。"},
+    {name:"唐·基奥",kw:["唐·基奥","Don Keough","Keough"],desc:"可口可乐前总裁兼COO（1981-1993），巴菲特的商业伙伴与密友。在可口可乐担任高管期间协助公司全球化扩张，巴菲特称其为\"可口可乐的灵魂\"。"},
+    {name:"罗斯·布鲁姆金",kw:["B夫人","罗斯·布鲁姆金","Blumkin"],desc:"内布拉斯加家具城（NFM）创始人（1893-1998）。白手起家的犹太移民，以\"薄利多销\"的极致低价策略闻名。巴菲特称其为\"最让我敬佩的企业家之一\"，1983年收购了其家具城90%的股份。"},
+    {name:"彼得·林奇",kw:["彼得·林奇","Peter Lynch"],desc:"富达麦哲伦基金传奇基金经理（1977-1990），13年间年化回报率29%，管理资产从1800万美元增长至140亿美元。著有《战胜华尔街》《彼得·林奇的成功投资》。其\"在能力圈内投资\"的理念与巴菲特相通。"},
+    {name:"菲利普·费雪",kw:["费雪","Fisher","Phil Fisher"],desc:"成长股投资先驱（1907-2004），著有《怎样选择成长股》《股市投资致富之道》。巴菲特称其投资方法为\"投资界最伟大思想之一\"，其\"买入卓越企业并长期持有\"的理念深刻影响了巴菲特从格雷厄姆式\"捡烟蒂\"向成长型投资的转型。"},
+    {name:"戴维·多德",kw:["多德","David Dodd","Dodd"],desc:"哥伦比亚大学金融学教授（1895-1988），与本杰明·格雷厄姆合著被誉为\"投资圣经\"的《证券分析》（1934年）。在哥大任教期间教授了巴菲特证券分析课程，对价值投资学派的建立贡献卓著。"},
+    {name:"沃尔特·施洛斯",kw:["施洛斯","Walter Schloss"],desc:"价值投资者（1916-2012），格雷厄姆的学生，曾与巴菲特在同一家公司工作。1955年创立自己的基金，47年间实现了年化15.3%的回报率，同期标普500年化回报率约10%。以极度分散、低成本的\"纯格雷厄姆式\"投资方法闻名。"},
+    {name:"约翰·伯格",kw:["约翰·伯格","John Bogle","Bogle"],desc:"先锋集团（Vanguard）创始人（1929-2019），指数基金之父。1975年创立全球首只指数基金，大幅降低投资成本，开创了被动投资革命。其\"成本至关重要\"的理念与巴菲特不谋而合，巴菲特多次公开推荐普通投资者购买先锋的标普500指数基金。"},
+    {name:"杰克·韦尔奇",kw:["杰克·韦尔奇","Jack Welch"],desc:"通用电气（GE）董事长兼CEO（1981-2001），20年间将GE市值从120亿美元提升至4000亿美元。巴菲特对其管理能力和股东价值导向高度赞赏，但坦承自己\"看不懂GE的业务\"而未投资。著有自传《杰克·韦尔奇自传》。"},
+  ]},
+  "公司":{color:"#4a6fa5",items:[
+    {name:"GEICO",kw:["GEICO","盖可"],desc:"伯克希尔最重要的子公司之一，美国第二大汽车保险公司。巴菲特1976年首次买入，1996年完全收购。低成本直销模式是其核心竞争力，托德·库姆斯近年主导了其数据分析改革。"},
+    {name:"可口可乐",kw:["可口可乐","Coca-Cola","Coke"],desc:"巴菲特最著名的投资之一，1988年开始建仓，持有超过35年，是\"买入并永久持有\"伟大品牌的经典案例。巴菲特本人也是可口可乐的忠实消费者，每天饮用。"},
+    {name:"美国运通",kw:["美国运通","American Express","运通"],desc:"巴菲特最早的\"特许经营权\"投资之一，1963年因\"色拉油丑闻\"导致股价暴跌时逆势买入并长期持有，是危机投资的经典案例，持有至今已超60年。"},
+    {name:"富国银行",kw:["富国银行","Wells Fargo"],desc:"巴菲特长期持有的银行股之一，从1990年开始建仓，持有近30年。巴菲特赞赏其交叉销售能力和稳健经营风格，但在2016年虚假账户丑闻后逐步减持，体现了其\"信任一旦受损就离开\"的原则。"},
+    {name:"华盛顿邮报",kw:["华盛顿邮报","Washington Post"],desc:"巴菲特1973年开始买入，持有至2014年出售，期间担任董事18年。这笔投资获得了超过100倍的回报。邮报在凯瑟琳·格雷厄姆领导下揭露水门事件，是巴菲特最引以为傲的投资之一。"},
+    {name:"苹果",kw:["苹果","Apple"],desc:"伯克希尔第一大重仓股，2016年开始买入，持有超过2720亿美元市值。巴菲特将其视为\"消费品公司\"而非科技公司，赞赏其强大的品牌忠诚度和生态系统粘性。被广泛认为是巴菲特晚年最精彩的投资之一。"},
+    {name:"IBM",kw:["IBM"],desc:"巴菲特2011年首次买入，是巴菲特投资科技公司的第一次尝试。但2017-2018年间清仓，坦承\"对IBM的判断错误\"。巴菲特表示IBM未能像预期那样建立持续的竞争优势，这笔亏损让他更加坚定\"投资自己看得懂的公司\"。"},
+    {name:"比亚迪",kw:["比亚迪","BYD"],desc:"查理·芒格力主推荐的投资，2008年买入2.25亿股，持有14年后于2022年开始减持。巴菲特对比亚迪的投资获得了超过30倍的回报，是他在中国最成功的投资案例，体现了芒格对优秀企业家的判断力。"},
+    {name:"宝洁",kw:["宝洁","Procter","P&G"],desc:"伯克希尔曾持有宝洁股份，主要通过2005年收购吉列时连带获得。宝洁是全球最大的消费品公司之一，拥有帮宝适、汰渍等知名品牌，符合巴菲特投资\"强大品牌消费品\"的一贯风格。"},
+    {name:"吉列",kw:["吉列","Gillette"],desc:"巴菲特1989年开始投资吉列，称\"每晚睡觉时想到全球有25亿男性的胡子还在长，就能安心入睡\"。吉列是巴菲特\"强大品牌+护城河\"投资理念的典型代表，后并入宝洁。"},
+    {name:"穆迪",kw:["穆迪","Moody's","Moody"],desc:"伯克希尔2000年开始买入穆迪股份，长期持有。穆迪是全球三大信用评级机构之一，巴菲特赞赏其\"特许经营权\"——评级行业受到严格监管，新进入者很难获得监管批准，形成了强大的护城河。"},
+    {name:"喜诗糖果",kw:["喜诗","See's","See"],desc:"1972年伯克希尔以2500万美元收购，是巴菲特投资理念转型的关键案例。在芒格的推动下，巴菲特首次为\"品牌价值\"支付溢价，喜诗糖果此后的几十年里为伯克希尔创造了超过20亿美元的利润，证明了\"以合理价格买入伟大企业\"的正确性。"},
+    {name:"BNSF铁路",kw:["BNSF","北伯林顿"," Burlington"],desc:"伯克希尔2010年以约440亿美元全资收购，是伯克希尔历史上最大的收购案。BNSF是美国最大的铁路货运公司之一，拥有约32000英里的铁路网络。巴菲特称其为\"对美国经济下注\"，为伯克希尔提供了稳定的现金流。"},
+    {name:"通用再保险",kw:["通用再保险","General Re"],desc:"伯克希尔1998年以220亿美元收购，但收购后爆出巨额亏损和财务丑闻，被巴菲特称为\"我犯过的最大的错误之一\"。巴菲特不得不亲自介入管理，花费数年才将公司扭亏为盈，是一个\"好价格买到了问题公司\"的反面教材。"},
+    {name:"国民赔偿公司",kw:["国民赔偿","National Indemnity"],desc:"伯克希尔1967年以860万美元收购，是巴菲特进军保险业的起点。国民赔偿公司由杰克·林沃尔特经营，其保守的承保理念深刻影响了巴菲特的保险战略，为伯克希尔后来的保险帝国奠定了基础。"},
+    {name:"内布拉斯加家具城",kw:["内布拉斯加家具","家具城","NFM"],desc:"1983年巴菲特以5500万美元收购90%股份，创始人B夫人（罗斯·布鲁姆金）继续经营。NFM以\"薄利多销\"的极致低价策略闻名，是奥马哈最大的家具卖场。巴菲特称其为\"理想收购的教科书案例\"。"},
+    {name:"所罗门兄弟",kw:["所罗门","Salomon"],desc:"巴菲特1987年投资7亿美元购买所罗门兄弟可转换优先股，1991年该公司爆出\"国债投标丑闻\"，巴菲特被迫临危受命担任临时董事长，成功化解了公司倒闭危机。这段经历被巴菲特称为\"我人生中最艰难的时刻\"。"},
+    {name:"好事多",kw:["好事多","Costco"],desc:"芒格力荐的投资对象，伯克希尔持有少量股份。好事多以其会员制模式和高效运营著称，芒格曾表示自己宁愿\"终身持有Costco也不卖出\"，将其视为最值得尊敬的企业之一。"},
+    {name:"麦当劳",kw:["麦当劳","McDonald"],desc:"巴菲特曾投资麦当劳，赞赏其全球品牌影响力和特许经营模式。麦当劳是巴菲特口中\"20年后仍然存在的公司\"之一，但其估值通常偏高，巴菲特的投资规模相对较小。"},
+    {name:"亨氏",kw:["亨氏","Heinz","H.J. Heinz"],desc:"2013年伯克希尔与3G资本合作，以280亿美元收购亨氏。巴菲特赞赏3G资本的极致成本削减能力，是伯克希尔与私募股权合作的罕见案例。后与卡夫合并成为卡夫亨氏，但业绩未达预期。"},
+  ]},
+  "关键词":{color:"#6b4c3b",items:[
+    {name:"护城河",kw:["护城河","moat"],desc:"企业能长期挡住竞争对手的独特优势，就像城堡周围的护城河。比如可口可乐的品牌——即使百事可乐做出一模一样的饮料，也抢不走可口可乐的消费者忠诚度。这种\"品牌护城河\"让好企业能长期赚取超额利润。"},
+    {name:"安全边际",kw:["安全边际","margin of safety"],desc:"用比实际价值便宜很多的价格买入，给自己留出犯错的空间。就像你评估一套房子值100万，但等到它跌到60万才买——那40万的差额就是安全边际。巴菲特买华盛顿邮报时，市值远低于其资产价值，就是典型的安全边际投资。"},
+    {name:"能力圈",kw:["能力圈","circle of competence"],desc:"只投资自己真正懂的东西，不碰看不懂的行业。巴菲特几十年不买科技股，因为他觉得自己看不懂——直到晚年他理解到苹果不仅是一家科技公司，更是一个\"消费品公司\"，消费者离不开iPhone就像离不开可口可乐。"},
+    {name:"复利",kw:["复利","compound","compounding"],desc:"利滚利——赚的钱继续赚更多的钱。巴菲特从11岁开始投资，到95岁积累了超过1500亿美元财富。他的秘诀不是某一年赚了100%，而是每年稳定赚约20%，坚持了60多年。这就是复利的威力：时间越长，增长越恐怖。"},
+    {name:"浮存金",kw:["浮存金","float"],desc:"保险公司先收保费、后赔钱，中间这笔钱可以拿来投资。比如你买车险交了5000元，但一年后才可能出事故——这5000元巴菲特可以先拿去用。伯克希尔持有超过1700亿美元的浮存金，相当于一笔\"免费贷款\"用来买股票。"},
+    {name:"内在价值",kw:["内在价值","intrinsic value"],desc:"一家公司未来能赚到的所有钱，折算到今天值多少。就像一栋房子如果每年能收10万房租，租30年总计300万——这就是它的内在价值。巴菲特买公司看的不是股价涨跌，而是这家公司未来总共能赚多少钱。"},
+    {name:"透视盈余",kw:["透视盈余","look-through","透视盈利"],desc:"伯克希尔持有其他公司股票，这些公司赚的利润中属于伯克希尔的那部分，即使没分现金给伯克希尔，巴菲特也把它算作自己的收益。比如可口可乐把利润拿去买新设备而没有分红——这钱实际上也是伯克希尔赚的，巴菲特在年报里会\"看穿\"会计规则算进去。"},
+    {name:"回购",kw:["回购","buyback","repurchase"],desc:"公司用自己的现金在市场上买回自己的股票。如果股价低于公司实际价值，回购对剩下的股东是好事——因为他们持有的股份变得更值钱了。巴菲特认为这是最稳健的回报股东方式，伯克希尔每年花数百亿美元回购股票。"},
+    {name:"股息",kw:["股息","dividend"],desc:"公司把赚到的利润分给股东。伯克希尔几乎从不分红——1967年分过一次之后就没再分过，因为巴菲特认为把钱留在公司能赚更多的钱。他常说，如果管理层能把1块钱变成超过1块钱，就不该把这一块钱分出去。"},
+    {name:"通货膨胀",kw:["通胀","通货膨胀","inflation"],desc:"钱越来越不值钱的现象。巴菲特认为通胀是投资者的最大敌人——如果每年通胀5%，你的购买力14年就少一半。所以巴菲特喜欢那些能涨价的品牌公司，比如可口可乐和喜诗糖果，通胀来了它们也能跟着涨价，保护了股东的利益。"},
+    {name:"商誉",kw:["商誉","goodwill"],desc:"公司收购另一家公司时，多付的那部分溢价。比如喜诗糖果当时的账面资产只有800万，但巴菲特花了2500万收购——多付的1700万就是商誉。这笔溢价是因为喜诗的品牌在顾客心中值这么多钱，后来的事实证明，这笔溢价物超所值。"},
+    {name:"递延税",kw:["递延税","deferred tax"],desc:"因为会计规则和税务规则不同而产生的一种\"迟点再交\"的税。比如伯克希尔买的股票涨了但没卖出，税务上就不用交税。巴菲特把递延税视为一笔\"政府无息贷款\"——钱先留着自己用，以后再说。这是长期持有策略的额外好处。"},
+    {name:"期权",kw:["期权","option","options"],desc:"一种金融合约，让持有者在未来以约定价格买入股票的权利。巴菲特强烈反对把期权作为高管奖金——因为如果股价涨了高管赚大钱，股价跌了他们也亏不了钱，这等于让高管\"只赢不输\"。伯克希尔从不给高管发期权，而是直接用业绩挂钩的现金奖励。"},
+    {name:"垃圾债券",kw:["垃圾债券","junk bond","高收益"],desc:"信用评级低、风险高的债券，利率也更高（所以也叫\"高收益债券\"）。巴菲特90年代在垃圾债券上赚过大钱，但他警告普通人不要碰。就像借钱给一个信用记录很差的人——利息虽然高，但随时可能本金都收不回来。"},
+    {name:"留存收益",kw:["留存收益","保留盈余","retained earn"],desc:"公司赚了钱但没分给股东，留在公司继续做生意的那部分钱。巴菲特判断管理层好不好的标准之一就是：把钱留下来创造的回报，是否比分给股东让股东自己去投资更高。伯克希尔留存收益超过1万亿美元，因为巴菲特把它们投到了回报更高的地方。"},
+    {name:"账面价值",kw:["账面价值","book value"],desc:"公司账面上的资产减去负债的会计数字。巴菲特早期用这个指标衡量伯克希尔的业绩，但后来发现账面价值不能反映公司的真实价值——比如喜诗糖果的品牌在账面上只值几百万，但实际创造利润的能力远超这个数字。"},
+    {name:"股票拆分",kw:["股票拆分","stock split","拆股"],desc:"把一股高价股票变成多股低价股票，总价值不变。巴菲特从不拆分伯克希尔A股（一股约60万美元），因为高股价自动筛选了认真做投资的人。他曾开玩笑说，希望只和\"真正的合伙人\"打交道，而不是只想炒短线的投机者。"},
+    {name:"衍生品",kw:["衍生品","derivative"],desc:"价值\"衍生\"自其他资产（股票、债券、汇率等）的金融合约，结构复杂。巴菲特称其为\"大规模毁灭性金融武器\"——因为产品太复杂，连专业机构都算不清风险。2008年金融危机就是衍生品惹的祸。不过伯克希尔自己也卖过一些简单的衍生品并赚了钱。"},
+    {name:"部分所有权",kw:["部分所有权","所有权","ownership"],desc:"巴菲特买股票的核心心态——买股票就是买下公司的一部分，不是买一张用来炒的纸片。比如巴菲特买可口可乐，想的是做可口可乐的\"合伙人\"，关注的是可乐好不好卖，而不是明天股价涨不涨。这个心态让他能持有优秀公司几十年。"},
+  ]},
+};
+
+// ===== 人物关系图 =====
+const RELATIONS = {
+  "导师与引路人":{color:"#2d6a4f",items:[
+    {name:"本杰明·格雷厄姆",img:"benjamin_graham.jpg",rel:"传授价值投资框架，雇佣他在格雷厄姆-纽曼公司工作，奠定了巴菲特投资哲学的根基"},
+    {name:"菲利普·费雪",img:"philip_fisher.jpg",rel:"以成长股理念补充了格雷厄姆纯低估投资的不足，推动巴菲特向「以合理价买伟大企业」转型"},
+    {name:"戴维·多德",img:"david_dodd.jpg",rel:"哥大课堂上教授巴菲特证券分析，与格雷厄姆合著《证券分析》作为教材"},
+    {name:"沃尔特·施洛斯",img:"walter_schloss.jpg",rel:"忠实践行格雷厄姆式价值投资，47年15.3%年化回报验证了价值投资的可靠性"},
+  ]},
+  "长期搭档":{color:"#c9a84c",items:[
+    {name:"查理·芒格",img:"charlie_munger.jpg",rel:"推动巴菲特从「捡烟蒂」转向「以合理价买伟大企业」，参与了喜诗糖果、可口可乐等关键投资决策，48年如一日提供智慧和陪伴"},
+  ]},
+  "接班人":{color:"#ddbc5a",items:[
+    {name:"格雷格·阿贝尔",img:"greg_abel.jpg",rel:"接管伯克希尔能源业务并做大做强，成为巴菲特放心交付公司的接班人，让接班问题不再困扰伯克希尔投资者"},
+  ]},
+  "核心高管":{color:"#4a6fa5",items:[
+    {name:"阿吉特·贾因",img:"ajit_jain.jpg",rel:"从零为伯克希尔建立了全球最大的再保险帝国，提供了巨额的「免费浮存金」作为投资杠杆"},
+    {name:"卢·辛普森",img:"lou_simpson.jpg",rel:"独立管理GEICO投资组合20年，年化回报约20%，证明了伯克希尔「放权给优秀经理人」模式的可行性"},
+    {name:"汤姆·墨菲",img:"tom_murphy.jpg",rel:"以超凡的资本配置和管理能力成为巴菲特眼中的管理标杆，巴菲特从其身上学到了「好生意+好管理者」的投资标准"},
+    {name:"唐·基奥",img:"don_keough.jpg",rel:"作为可口可乐前总裁，在巴菲特投资可口可乐过程中提供了关键的内部视角，帮助理解可口可乐的业务本质"},
+  ]},
+  "密友":{color:"#a67c52",items:[
+    {name:"比尔·盖茨",img:"bill_gates.jpg",rel:"在科技认知上补充了巴菲特的知识盲区，两人通过盖茨基金会合作将大部分财富回馈社会"},
+    {name:"凯瑟琳·格雷厄姆",img:"katharine_graham.jpg",rel:"邀请巴菲特进入华盛顿邮报董事会，帮助他在传媒和政商圈建立声望和人脉"},
+  ]},
+  "投资先贤":{color:"#6b4c3b",items:[
+    {name:"彼得·林奇",img:"peter_lynch.jpg",rel:"以「投资你所知」的实盘战绩（13年年化29%）与巴菲特的能力圈理念互相印证"},
+    {name:"约翰·伯格",img:"john_bogle.jpg",rel:"开创的低成本指数基金为普通投资者提供了标准答案，巴菲特多次公开推荐普通投资者买指数基金"},
+  ]},
+  "尊敬的企业家":{color:"#7f4f24",items:[
+    {name:"杰克·韦尔奇",img:"jack_welch.jpg",rel:"以股东价值导向的管理风格成为美国企业界标杆，巴菲特虽因看不懂GE而未投资、但高度认同其管理理念"},
+    {name:"罗斯·布鲁姆金",img:"rose_blumkin.jpg",rel:"以极致低价高效的经营风格成为伯克希尔收购模式的标杆案例，让巴菲特看到了「优秀企业家」的标准"},
+  ]},
+};
+
+// ===== 模式管理 =====
+var mode = 'letters';
+var currentYear = null;
+var activeThemes = {};
+var searchMode = false;
+var activeEntities = {};
+var entityIndex = {};
+var entityBuilt = false;
+var kgChart = null;
+var kgModeFilter = {};
+var kgResizeHandler = null;
+
+function getData() { return mode === 'letters' ? LETTERS : MEETINGS; }
+function getPfx() { return mode === 'letters' ? 'L-' : 'M-'; }
+function titleFor(y, m) {
+  if (m === 'meetings') return y + ' 年伯克希尔股东大会实录';
+  return y <= 1969 ? y + ' 年巴菲特致合伙人的信' : y + ' 年致伯克希尔·哈撒韦股东的信';
+}
+function modePrefixId(pid) { return getPfx() + pid; }
+
+// ===== 存储 =====
+var ST = {};
+function rJ(k,fb){try{var r=localStorage.getItem(k);return r?JSON.parse(r):fb}catch(e){console.warn(k,e);try{var r=localStorage.getItem(k);if(r)localStorage.setItem(k+'_bak',r)}catch(_){}localStorage.setItem(k,JSON.stringify(fb));return fb}}
+function wJ(k,d){try{localStorage.setItem(k,JSON.stringify(d));return true}catch(e){if(e.name==='QuotaExceededError')alert('存储空间已满');else console.error(k,e);return false}}
+ST.bm=function(){return rJ('bb_bm',{})};
+ST.addBM=function(pid,y,pr){var b=this.bm();if(b[pid])return true;b[pid]={pid:pid,y:y,pr:pr.slice(0,60)};return wJ('bb_bm',b)};
+ST.rmBM=function(pid){var b=this.bm();delete b[pid];return wJ('bb_bm',b)};
+ST.isBM=function(pid){return!!this.bm()[pid]};
+ST.nt=function(){return rJ('bb_nt',{})};
+ST.getNT=function(pid){var n=this.nt();return n[pid]||null};
+ST.setNT=function(pid,c){var n=this.nt();if(c.trim()){n[pid]={pid:pid,c:c.trim(),at:new Date().toISOString()}}else delete n[pid];return wJ('bb_nt',n)};
+ST.pr=function(){return rJ('bb_pr',{})};
+ST.svPr=function(y,st){var p=this.pr();p[getPfx()+y]={y:y,st:st,at:new Date().toISOString()};wJ('bb_pr',p)};
+ST.getPr=function(y){var p=this.pr();return p[getPfx()+y]||null};
+ST.cln=function(vs){var b=this.bm(),n=this.nt(),c=false;for(var k in b){if(b.hasOwnProperty(k)&&!vs.has(k)){delete b[k];c=true}}for(var k in n){if(n.hasOwnProperty(k)&&!vs.has(k)){delete n[k];c=true}}if(c){wJ('bb_bm',b);wJ('bb_nt',n)}return c};
+
+// ===== 主题切换 =====
+function toggleTheme(){
+  var html=document.documentElement,isLight=html.classList.toggle('light');
+  localStorage.setItem('bb_theme',isLight?'light':'dark');
+  D.thBtn.textContent=isLight?'🌙':'☀️';
+  updateGraphTheme();
+}
+function updateGraphTheme(){
+  if(!kgChart||mode!=='knowledgegraph')return;
+  var isLight=document.documentElement.classList.contains('light');
+  function tC(dk,lt){return isLight?lt:dk}
+  kgChart.setOption({
+    title:{textStyle:{color:tC('#eee4d6','#2c241c')},subtextStyle:{color:tC('#ad9e8e','#6b5f53')}},
+    tooltip:{backgroundColor:tC('#1c1612','#fff'),borderColor:tC('#3a3028','#d4c9bd'),textStyle:{color:tC('#dccfc0','#3d342b')}},
+    legend:{textStyle:{color:tC('#dccfc0','#3d342b')}},
+    series:[{label:{color:tC('#dccfc0','#3d342b'),textBorderColor:tC('#161210','#f5f0eb')},lineStyle:{color:tC('#3a3028','#d4c9bd')}}]
+  });
+}
+function loadTheme(){
+  var t=localStorage.getItem('bb_theme');
+  if(t==='light'){document.documentElement.classList.add('light');D.thBtn.textContent='🌙'}
+  else{D.thBtn.textContent='☀️'}
+}
+
+// ===== 搜索 =====
+var dt;
+function searchData(q,data){var qq=q.trim();if(!qq)return[];var r=[];for(var li=0;li<data.length;li++){var l=data[li],m=[];for(var pi=0;pi<l.paragraphs.length;pi++){var t=l.paragraphs[pi];if(t.indexOf(qq)!==-1)m.push({t:t,i:pi})}if(m.length)r.push({item:l,idx:li,mc:m.length,ps:m})}r.sort(function(a,b){return b.mc-a.mc});return r}
+function ctx(t,q,cl){if(!cl)cl=30;var i=t.indexOf(q);if(i===-1)return t.slice(0,80);var s=Math.max(0,i-cl),e=Math.min(t.length,i+q.length+cl);return(s>0?'…':'')+t.slice(s,e)+(e<t.length?'…':'')}
+function hl(t,q){if(!q.trim())return esc(t);var e=esc(t),qq=esc(q.trim());return e.replace(new RegExp('('+qq.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+")",'gi'),'<span class="mh">$1</span>')}
+function db(cb,d){clearTimeout(dt);dt=setTimeout(cb,d||300)}
+function esc(t){var e=document.createElement('div');e.textContent=t;return e.innerHTML}
+
+// ===== 内容高亮 =====
+function fmt(t){
+  var e=esc(t);
+  // 1. 讲话人: 巴菲特 / 芒格 / 查理 / 股东 → <span class="hl-spk">
+  e=e.replace(/(巴菲特|芒格|查理|股东)[：:]/g,'<span class="hl-spk">$1</span>：');
+  // 2. 摘要章节标题
+  e=e.replace(/(核心主题|要点提炼|关键数据|总结)[：:]/g,'<span class="hl-hd-s">$1</span>：');
+  // 3. 序号: 行首或括号后的 数字+、或.
+  e=e.replace(/(^|\s|（|\(|\[)(\d+)([、.,])/gm,'$1<span class="hl-num">$2</span>$3');
+  // 4. 引号内容: 「」或""
+  e=e.replace(/「([^」]*)」/g,'「<span class="hl-q">$1</span>」');
+  e=e.replace(/“([^”]*)”/g,'“<span class="hl-q">$1</span>”');
+  // 5. 关键术语
+  var terms=['护城河','安全边际','能力圈','复利','浮存金','内在价值','透视盈余','账面价值',
+    '留存收益','商誉','递延税','回购','股息','通货膨胀','衍生品','垃圾债券',
+    '股票拆分','市场先生','雪茄烟蒂','IPO','部分所有权','套利','折现率','现金流','特许经营权',
+    '品牌价值','竞争优势','规模不经济','制度性压力','承保','杠杆','对冲'];
+  for(var i=0;i<terms.length;i++){
+    var re=new RegExp('('+terms[i].replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','g');
+    e=e.replace(re,'<span class="hl-term">$1</span>');
+  }
+  // 6. 人物和公司名称（可点击跳转，视觉偏低调）
+  var entList=[];
+  if(ENTITIES["人物"])ENTITIES["人物"].items.forEach(function(ent){entList.push({n:ent.name,c:'hl-ent',kw:ent.kw})});
+  if(ENTITIES["公司"])ENTITIES["公司"].items.forEach(function(ent){entList.push({n:ent.name,c:'hl-ent',kw:ent.kw})});
+  entList.sort(function(a,b){return b.n.length-a.n.length});
+  var seen={};
+  entList=entList.filter(function(item){
+    if(seen[item.n])return false;
+    seen[item.n]=true;
+    if(terms.indexOf(item.n)!==-1)return false;
+    return true;
+  });
+  entList.forEach(function(item){
+    var re=new RegExp('('+item.n.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','g');
+    e=e.replace(re,'<span class="hl-ent">$1</span>');
+  });
+  return e;
+}
+function tryShowEntity(name){
+  showEntity(name);
+}
+
+// ===== DOM =====
+var D={};
+function iD(){
+  D.tab=$('#tabs');D.yL=$('#year-list');D.tF=$('#theme-filter');D.ct=$('#content');
+  D.sI=$('#search-input');D.bL=$('#bookmark-list');D.ts=$('#theme-section');
+  D.eS=$('#entity-section');D.eF=$('#entity-filter');
+  D.stL=$('#stat-letters');D.stM=$('#stat-meetings');D.stT=$('#stat-themes');
+  D.stitle=$('#sidebar-title');D.scount=$('#sidebar-count');
+  D.wt=$('#welcome-title');D.wd=$('#welcome-desc');
+  D.thBtn=$('#th-btn');D.btt=$('#btt');D.prgBar=$('#prg-bar-in');
+  D.randBtn=$('#rand-btn');D.hL=$('#history-list');D.hS=$('#history-section');
+}
+function $(s,p){return(p||document).querySelector(s)}
+function $$(s,p){return Array.from((p||document).querySelectorAll(s))}
+function gL(y){var d=getData();for(var i=0;i<d.length;i++){if(d[i].year===y)return d[i]}return null}
+function gF(){
+  if(mode==='meetings')return getData();
+  var data=LETTERS;
+  var tk=Object.keys(activeThemes);
+  if(tk.length)data=data.filter(function(l){return l.themes.some(function(t){return activeThemes[t]})});
+  var ek=Object.keys(activeEntities);
+  if(ek.length){buildEntityIndex();data=data.filter(function(l){return ek.some(function(e){return entityIndex[e]&&entityIndex[e].years.has(l.year)})})}
+  return data;
+}
+
+// ===== Tab 切换 =====
+function switchMode(m){
+  mode=m;currentYear=null;searchMode=false;D.sI.value='';
+  // 移动端切换标签时自动关闭侧边栏
+  var sb=$('#sb'),sbOv=$('#sb-ov');
+  if(sb)sb.classList.remove('open');if(sbOv)sbOv.classList.remove('open');
+  D.tab.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('act',t.dataset.mode===m)});
+  D.ts.style.display=mode==='letters'||mode==='knowledgegraph'?'':'none';
+  if(D.eS)D.eS.style.display=mode==='letters'||mode==='knowledgegraph'?'':'none';
+  if(m!=='knowledgegraph'&&kgChart){kgChart.dispose();kgChart=null;if(kgResizeHandler){window.removeEventListener('resize',kgResizeHandler);kgResizeHandler=null}}
+  if(m==='relations'){
+    D.stitle.textContent='🔗 关系图';
+    renderRelations();return;
+  }
+  if(m==='knowledgegraph'){
+    D.stitle.textContent='🌐 知识图谱';
+    renderKnowledgeGraph();return;
+  }
+  if(m==='stats'){
+    D.stitle.textContent='📊 数据统计';
+    renderStats();return;
+  }
+  D.stitle.textContent=mode==='letters'?'📖 致股东的信':'🎤 股东大会';
+  renderSidebar();renderThemeFilter();renderEntityFilter();renderBookmarks();renderHistory();updateStats();
+  var d=getData();
+  if(d.length){showContent(d[d.length-1].year)}else{D.ct.innerHTML='<div class="se"><p>暂无数据</p></div>'}
+}
+
+// ===== 渲染 =====
+function renderSidebar(){
+  var d=gF(),s=d.slice().sort(function(a,b){return b.year-a.year});
+  D.scount.textContent='共 '+d.length+' 年';
+  D.yL.innerHTML=s.map(function(l){
+    var a=l.year===currentYear;
+    return '<li class="yi'+(a?' act':'')+'" data-year="'+l.year+'"><span>'+esc(titleFor(l.year,mode))+'</span>'+
+      (mode==='letters'?'<span class="yt">'+l.themes.map(function(t){var c=THEMES[t]?THEMES[t].color:'#666';return '<span class="ytd" style="background:'+c+'" title="'+esc(t)+'"></span>'}).join('')+'</span>':'')+'</li>';
+  }).join('');
+  D.yL.querySelectorAll('.yi').forEach(function(el){el.addEventListener('click',function(){var y=Number(el.dataset.year);if(searchMode)clearSearch();showContent(y)})});
+}
+
+function renderThemeFilter(){
+  var data=LETTERS,all=Object.keys(THEMES);
+  // 计算每个主题出现的年数
+  var cnts={};all.forEach(function(n){cnts[n]=0;var s=new Set;data.forEach(function(l){if(l.themes.indexOf(n)!==-1)s.add(l.year)});cnts[n]=s.size});
+  var act=Object.keys(activeThemes).length;
+  D.tF.innerHTML='<div class="tf-hd">'+
+    '<span class="tf-cnt">'+(act?act+'/'+all.length+' 个':'全部 '+all.length+' 个')+'</span>'+
+    (act?'<button class="tf-clr" id="tf-clr">清除</button>':'')+
+    '</div><div class="tf-tg">'+
+    all.map(function(n){var m=THEMES[n],a=!!activeThemes[n];
+      return '<div class="tt'+(a?' act':'')+'" data-theme="'+esc(n)+'" style="'+(a?'background:'+m.color+';color:'+(m.text||'#fff'):'')+'"><span class="tt-d" style="background:'+m.color+'"></span><span>'+n+'</span><span class="tt-c">'+cnts[n]+'</span></div>'}).
+    join('')+'</div>';
+  D.tF.querySelectorAll('.tt').forEach(function(el){el.addEventListener('click',function(){
+    var n=el.dataset.theme;if(activeThemes[n]){delete activeThemes[n]}else{activeThemes[n]=true}
+    renderThemeFilter();renderSidebar()})});
+  var clr=document.getElementById('tf-clr');if(clr)clr.addEventListener('click',function(){activeThemes={};renderThemeFilter();renderSidebar()});
+}
+
+// ===== 实体索引 =====
+function buildEntityIndex(){
+  if(entityBuilt)return;
+  var cats=Object.keys(ENTITIES);
+  cats.forEach(function(cat){
+    ENTITIES[cat].items.forEach(function(ent){
+      var years=new Set,refs={};
+      LETTERS.forEach(function(l){
+        var matches=[];
+        l.paragraphs.forEach(function(p,i){
+          if(ent.kw.some(function(kw){return p.indexOf(kw)!==-1}))matches.push(i);
+        });
+        if(matches.length){years.add(l.year);refs[l.year]=matches}
+      });
+      MEETINGS.forEach(function(m){
+        for(var pi=0;pi<m.paragraphs.length;pi++){
+          if(ent.kw.some(function(kw){return m.paragraphs[pi].indexOf(kw)!==-1})){years.add(m.year);break}
+        }
+      });
+      entityIndex[ent.name]={years:years,refs:refs};
+    });
+  });
+  entityBuilt=true;
+}
+
+function getEntityInfo(name){
+  var cats=Object.keys(ENTITIES);
+  for(var ci=0;ci<cats.length;ci++){
+    var c=cats[ci],items=ENTITIES[c].items;
+    for(var ii=0;ii<items.length;ii++){if(items[ii].name===name)return{cat:c,data:items[ii],color:ENTITIES[c].color}}
+  }
+  return null;
+}
+
+// ===== 知识图谱 =====
+function buildGraphData(){
+  buildEntityIndex();
+  var nodes=[],links=[],names=[];
+  var cats=Object.keys(ENTITIES);
+  cats.forEach(function(cat){
+    if(kgModeFilter[cat]===false)return;
+    ENTITIES[cat].items.forEach(function(ent){
+      var idx=entityIndex[ent.name];
+      var yrCnt=idx?idx.years.size:0;
+      names.push(ent.name);
+      var sz=Math.max(32,Math.min(80,18+yrCnt*2));
+      nodes.push({id:ent.name,name:ent.name,value:yrCnt,itemStyle:{color:ENTITIES[cat].color},category:cat,symbolSize:sz});
+    });
+  });
+  var il=names.length;
+  for(var i=0;i<il;i++){
+    for(var j=i+1;j<il;j++){
+      var a=entityIndex[names[i]],b=entityIndex[names[j]];
+      if(!a||!b)continue;
+      var common=0;
+      a.years.forEach(function(y){if(b.years.has(y))common++});
+      if(common>0)links.push({source:names[i],target:names[j],value:common,lineStyle:{width:Math.max(1,Math.min(8,common*0.5))}});
+    }
+  }
+  return {nodes:nodes,links:links};
+}
+function renderKnowledgeGraph(){
+  if(typeof echarts==='undefined'){D.ct.innerHTML='<div class="se"><p>ECharts 库加载失败，请检查网络连接后刷新页面</p></div>';return}
+  D.stitle.textContent='🌐 知识图谱';D.scount.textContent='';
+  if(!kgModeFilter||!Object.keys(kgModeFilter).length){var c=Object.keys(ENTITIES);c.forEach(function(k){kgModeFilter[k]=true})}
+  renderEntityFilter();
+  D.yL.innerHTML='';
+  var data=buildGraphData(),html='<div class="kg"><div class="kg-container" id="kg-container"></div></div>';
+  D.ct.innerHTML=html;
+  if(kgChart){kgChart.dispose();kgChart=null}
+  var dom=document.getElementById('kg-container');if(!dom)return;
+  kgChart=echarts.init(dom);
+  var isLight=document.documentElement.classList.contains('light');
+  function tC(dk,lt){return isLight?lt:dk}
+  kgChart.setOption({
+    title:{text:'实体关系知识图谱',left:'center',top:6,
+      textStyle:{color:tC('#eee4d6','#2c241c'),fontSize:13,fontWeight:600}},
+    tooltip:{trigger:'item',
+      formatter:function(p){
+        if(p.dataType==='node')return'<strong>'+p.data.name+'</strong><br/>类别: '+p.data.category+'<br/>提及年数: '+p.data.value+' 年';
+        if(p.dataType==='edge')return p.data.source+' ↔ '+p.data.target+'<br/>共现: '+p.data.value+' 年';
+        return'';
+      },
+      backgroundColor:tC('#1c1612','#fff'),borderColor:tC('#3a3028','#d4c9bd'),textStyle:{color:tC('#dccfc0','#3d342b'),fontSize:12}},
+    legend:{data:Object.keys(ENTITIES).filter(function(c){return kgModeFilter[c]!==false}).map(function(c){return{name:c,itemStyle:{color:ENTITIES[c].color}}}),
+      top:32,left:'center',textStyle:{color:tC('#dccfc0','#3d342b'),fontSize:10}},
+    animationDuration:800,animationEasingUpdate:'cubicOut',
+    series:[{type:'graph',layout:'force',
+      force:{repulsion:3000,edgeLength:[350,700],layoutAnimation:true,friction:0.08,gravity:0.02},
+      roam:true,draggable:true,zoom:0.5,
+      data:data.nodes,links:data.links,
+      categories:Object.keys(ENTITIES).map(function(c){return{name:c,itemStyle:{color:ENTITIES[c].color}}}),
+      label:{show:true,position:'bottom',formatter:'{b}',fontSize:10,color:tC('#dccfc0','#3d342b'),textBorderColor:tC('#161210','#f5f0eb'),textBorderWidth:1.5},
+      lineStyle:{color:tC('#3a3028','#d4c9bd'),curveness:0.25,opacity:0.45,width:1},
+      edgeSymbol:['none','none'],
+      emphasis:{focus:'adjacency',lineStyle:{width:2.5,opacity:0.8}},
+      blur:{opacity:0.15,lineStyle:{opacity:0.1}}
+    }]
+  });
+  kgChart.on('click',function(p){if(p.dataType==='node'&&p.data.name)showEntity(p.data.name)});
+  kgChart.on('dblclick',function(p){if(p.dataType==='node'&&p.data.name)showEntity(p.data.name)});
+  if(kgResizeHandler)window.removeEventListener('resize',kgResizeHandler);
+  kgResizeHandler=function(){if(kgChart)kgChart.resize()};
+  window.addEventListener('resize',kgResizeHandler);
+}
+
+// ===== 数据统计 =====
+function renderStats(){
+  D.stitle.textContent='📊 数据统计';D.scount.textContent='';
+  D.yL.innerHTML='';
+  if(D.eS)D.eS.style.display='none';
+  D.ts.style.display='none';
+
+  // 侧边栏：数字卡片
+  var totPars=0,totChars=0;
+  LETTERS.forEach(function(l){l.paragraphs.forEach(function(p){totPars++;totChars+=p.length})});
+  MEETINGS.forEach(function(m){m.paragraphs.forEach(function(p){totPars++;totChars+=p.length})});
+  var thCounts={};Object.keys(THEMES).forEach(function(t){thCounts[t]=0;LETTERS.forEach(function(l){if(l.themes.indexOf(t)!==-1)thCounts[t]++})});
+  var topTheme=Object.keys(thCounts).sort(function(a,b){return thCounts[b]-thCounts[a]})[0];
+  var h='<div class="dash-g">'+
+    '<div class="dash-c"><div class="dc-v">'+LETTERS.length+'</div><div class="dc-l">致股东的信</div></div>'+
+    '<div class="dash-c"><div class="dc-v">'+MEETINGS.length+'</div><div class="dc-l">股东大会</div></div>'+
+    '<div class="dash-c"><div class="dc-v">'+totPars.toLocaleString()+'</div><div class="dc-l">总段落数</div></div>'+
+    '<div class="dash-c"><div class="dc-v">'+(totChars/10000|0)+'万</div><div class="dc-l">总字数</div></div>'+
+    '</div>';
+  // 统计侧边栏
+  D.scount.innerHTML='<div class="dash-g" style="gap:6px;display:flex;flex-wrap:wrap;margin:0">'+
+    '<div style="flex:1;min-width:80px;padding:8px;background:var(--bg-elevated);border-radius:var(--r);text-align:center">'+
+    '<div style="font-size:16px;font-weight:700;color:var(--accent)">'+LETTERS.length+'</div><div style="font-size:10px;color:var(--text-muted)">信件</div></div>'+
+    '<div style="flex:1;min-width:80px;padding:8px;background:var(--bg-elevated);border-radius:var(--r);text-align:center">'+
+    '<div style="font-size:16px;font-weight:700;color:var(--accent)">'+MEETINGS.length+'</div><div style="font-size:10px;color:var(--text-muted)">会议</div></div>'+
+    '<div style="flex:1;min-width:80px;padding:8px;background:var(--bg-elevated);border-radius:var(--r);text-align:center">'+
+    '<div style="font-size:16px;font-weight:700;color:var(--accent)">'+totPars.toLocaleString()+'</div><div style="font-size:10px;color:var(--text-muted)">段落</div></div>'+
+    '<div style="flex:1;min-width:80px;padding:8px;background:var(--bg-elevated);border-radius:var(--r);text-align:center">'+
+    '<div style="font-size:16px;font-weight:700;color:var(--accent)">'+(totChars/10000|0)+'万</div><div style="font-size:10px;color:var(--text-muted)">字数</div></div></div>';
+
+  // 图表 1：主题分布圆环图
+  h+='<div class="dash-chart"><h3>📌 主题分布（覆盖年数）</h3><div class="dc-c" id="dc-theme"></div></div>';
+
+  // 图表 2：实体词频条形图
+  buildEntityIndex();
+  h+='<div class="dash-chart"><h3>🔝 实体提及年数 Top 15</h3><div class="dc-c" id="dc-entity"></div></div>';
+
+  // 图表 3：年度趋势
+  h+='<div class="dash-chart"><h3>📈 每封信内容量趋势</h3><div class="dc-c" id="dc-trend"></div></div>';
+
+  h+='</div>';
+  D.ct.innerHTML=h;
+
+  var isLight=document.documentElement.classList.contains('light');
+  function tC(dk,lt){return isLight?lt:dk}
+  var tCol=tC('#dccfc0','#3d342b'),tMuted=tC('#ad9e8e','#6b5f53');
+
+  // 主题圆环图
+  var thChart=echarts.init(document.getElementById('dc-theme'));
+  thChart.setOption({
+    tooltip:{trigger:'item',formatter:'{b}: {c} 年 ({d}%)'},
+    color:Object.keys(THEMES).map(function(t){return THEMES[t].color}),
+    legend:{bottom:0,textStyle:{color:tCol,fontSize:11}},
+    series:[{type:'pie',radius:['40%','65%'],avoidLabelOverlap:true,
+      label:{color:tCol,fontSize:12},
+      emphasis:{label:{fontSize:14,fontWeight:'bold'},itemStyle:{shadowBlur:10,shadowColor:'rgba(0,0,0,0.3)'}},
+      data:Object.keys(THEMES).map(function(t){return{value:thCounts[t],name:t}})
+    }]
+  });
+
+  // 实体词频条形图
+  var entArr=[];
+  Object.keys(ENTITIES).forEach(function(cat){
+    ENTITIES[cat].items.forEach(function(ent){
+      var idx=entityIndex[ent.name];
+      if(idx)entArr.push({n:ent.name,v:idx.years.size,c:ENTITIES[cat].color});
+    });
+  });
+  entArr.sort(function(a,b){return b.v-a.v});
+  entArr=entArr.slice(0,15);
+  var entChart=echarts.init(document.getElementById('dc-entity'));
+  entChart.setOption({
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},formatter:function(p){return p[0].name+'：'+p[0].value+' 年'}},
+    grid:{left:8,right:20,top:4,bottom:24,containLabel:true},
+    xAxis:{type:'value',axisLabel:{color:tMuted,fontSize:10},splitLine:{lineStyle:{color:tC('#2a221c','#e0d6cc')}}},
+    yAxis:{type:'category',data:entArr.map(function(e){return e.n}),axisLabel:{color:tCol,fontSize:11},
+      axisLine:{show:false},axisTick:{show:false}},
+    series:[{type:'bar',data:entArr.map(function(e){return{value:e.v,itemStyle:{color:e.c}}}),barMaxWidth:20,
+      emphasis:{itemStyle:{shadowBlur:6,shadowColor:'rgba(0,0,0,0.3)'}}}]
+  });
+  entChart.on('click',function(p){if(p.name)showEntity(p.name)});
+
+  // 年度趋势折线图
+  var years=[],parCnts=[],charCnts=[];
+  LETTERS.forEach(function(l){years.push(l.year);parCnts.push(l.paragraphs.length);var c=0;l.paragraphs.forEach(function(p){c+=p.length});charCnts.push(c/100|0)});
+  var trChart=echarts.init(document.getElementById('dc-trend'));
+  trChart.setOption({
+    tooltip:{trigger:'axis',formatter:function(p){var r='<strong>'+p[0].axisValue+'</strong>';p.forEach(function(pi){r+='<br/>'+pi.marker+' '+pi.seriesName+': '+pi.value});return r}},
+    legend:{data:['段落数','字数(百)'],bottom:0,textStyle:{color:tCol,fontSize:11}},
+    grid:{left:8,right:8,top:8,bottom:36,containLabel:true},
+    xAxis:{type:'category',data:years,axisLabel:{color:tMuted,fontSize:9,interval:4},
+      axisLine:{lineStyle:{color:tC('#2a221c','#d4c9bd')}}},
+    yAxis:{type:'value',axisLabel:{color:tMuted,fontSize:10},splitLine:{lineStyle:{color:tC('#2a221c','#e0d6cc')}}},
+    series:[{name:'段落数',type:'line',data:parCnts,smooth:true,lineStyle:{color:'#c9a84c',width:1.5},
+      areaStyle:{color:tC('rgba(201,168,76,0.12)','rgba(201,168,76,0.08)')},symbol:'circle',symbolSize:3},
+      {name:'字数(百)',type:'line',data:charCnts,smooth:true,lineStyle:{color:'#4a6fa5',width:1.5},
+        areaStyle:{color:tC('rgba(74,111,165,0.12)','rgba(74,111,165,0.08)')},symbol:'diamond',symbolSize:3}]
+  });
+  trChart.on('click',function(p){if(p.name&&p.name!=='')showContent(Number(p.name))});
+}
+
+function renderEntityFilter(){
+  if(mode==='knowledgegraph'){
+    var cats=Object.keys(ENTITIES);
+    var allNames=[];cats.forEach(function(c){ENTITIES[c].items.forEach(function(e){allNames.push(e.name)})});
+    var visible=0;cats.forEach(function(c){if(kgModeFilter[c]!==false)visible+=ENTITIES[c].items.length});
+    var h='<div class="tf-hd"><span class="tf-cnt">'+visible+'/'+allNames.length+' 个实体可见</span></div>';
+    cats.forEach(function(cat){
+      var m=ENTITIES[cat],active=kgModeFilter[cat]!==false;
+      h+='<div class="tt'+(active?' act':'')+'" data-kgcat="'+cat+'" style="'+(active?'background:'+m.color+';color:#fff':'')+'">'+
+        '<span class="tt-d" style="background:'+m.color+'"></span><span>'+cat+'</span><span class="tt-c">'+m.items.length+'</span></div>';
+    });
+    D.eF.innerHTML=h;
+    D.eF.querySelectorAll('.tt').forEach(function(el){el.addEventListener('click',function(){
+      var cat=el.dataset.kgcat;kgModeFilter[cat]=(kgModeFilter[cat]!==false)?false:true;
+      renderEntityFilter();renderKnowledgeGraph();
+    })});
+    return;
+  }
+  buildEntityIndex();
+  var cats=Object.keys(ENTITIES);
+  var allNames=[];cats.forEach(function(c){ENTITIES[c].items.forEach(function(e){allNames.push(e.name)})});
+  var act=Object.keys(activeEntities).length;
+  var h='<div class="tf-hd"><span class="tf-cnt">'+(act?act+'/'+allNames.length+' 个筛选':'共 '+allNames.length+' 个')+'</span>'+
+    (act?'<button class="tf-clr" id="ef-clr">清除筛选</button>':'')+'</div>';
+  cats.forEach(function(cat){
+    var m=ENTITIES[cat],items=m.items;
+    h+='<div class="ef-cat" style="color:'+m.color+'">'+cat+'</div><div class="tf-tg">';
+    h+=items.map(function(ent){
+      var ei=entityIndex[ent.name],cnt=ei?ei.years.size:0,a=!!activeEntities[ent.name];
+      return '<div class="tt'+(a?' act':'')+'" data-entity="'+esc(ent.name)+'" style="'+(a?'background:'+m.color+';color:#fff':'')+'"><span class="tt-d" style="background:'+m.color+'"></span><span class="tt-n">'+esc(ent.name)+'</span><span class="tt-c">'+cnt+'</span>'+
+        (a?'<span class="tt-f">⊖</span>':'<span class="tt-f">⊕</span>')+'</div>';
+    }).join('')+'</div>';
+  });
+  D.eF.innerHTML=h;
+  D.eF.querySelectorAll('.tt').forEach(function(el){el.addEventListener('click',function(e){
+    var n=el.dataset.entity;
+    if(e.target.classList.contains('tt-f')||activeEntities[n]){e.stopPropagation();
+      if(activeEntities[n]){delete activeEntities[n]}else{activeEntities[n]=true}
+      renderEntityFilter();renderSidebar();return}
+    showEntity(n);
+  })});
+  var clr=document.getElementById('ef-clr');if(clr)clr.addEventListener('click',function(){activeEntities={};renderEntityFilter();renderSidebar()});
+}
+
+// ===== 侧边栏折叠 =====
+function toggleSection(id){
+  var bd=document.getElementById(id+'-bd'),ar=document.querySelector('#'+id+' .sbs-ar');
+  if(!bd)return;
+  var isOpen=bd.style.maxHeight&&bd.style.maxHeight!=='0px';
+  if(isOpen){
+    bd.style.maxHeight='0px';
+    if(ar)ar.classList.remove('ar');
+    try{localStorage.setItem('sb_'+id,'0')}catch(e){}
+  }else{
+    bd.style.maxHeight=bd.scrollHeight+'px';
+    if(ar)ar.classList.add('ar');
+    try{localStorage.setItem('sb_'+id,'1')}catch(e){}
+  }
+}
+function restoreSections(){
+  ['theme-section','entity-section','bookmark-section','history-section'].forEach(function(id){
+    var bd=document.getElementById(id+'-bd');
+    if(!bd)return;
+    var v=null;try{v=localStorage.getItem('sb_'+id)}catch(e){}
+    if(v===null)v=id==='theme-section'?'1':'0';
+    if(v==='0'){bd.style.maxHeight='0px';var ar=document.querySelector('#'+id+' .sbs-ar');if(ar)ar.classList.remove('ar')}
+    else{bd.style.maxHeight=bd.scrollHeight+'px';var ar=document.querySelector('#'+id+' .sbs-ar');if(ar)ar.classList.add('ar')}
+  });
+}
+
+// ===== 实体详情页 =====
+function showEntity(name){
+  var info=getEntityInfo(name);
+  if(!info)return;
+  searchMode=false;D.sI.value='';currentYear=null;
+  renderSidebar();renderEntityFilter();
+  var idx=entityIndex[name],ei=idx?idx.years:new Set;
+  var years=Array.from(ei).sort(function(a,b){return b-a});
+  var h='<div class="ev"><div class="ev-h"><span class="ev-b" style="background:'+info.color+'">'+esc(info.cat)+'</span><h1>'+esc(name)+'</h1></div>';
+  if(info.data.desc)h+='<p class="ev-d">'+esc(info.data.desc)+'</p>';
+  h+='<div class="ev-s"><span>📄 涉及 '+years.length+' 年</span></div>';
+  if(years.length){
+    var ek=Object.keys(activeEntities);
+    if(ek.length)h+='<div style="margin:8px 0;padding:8px 12px;background:var(--accent-subtle);border-radius:4px;font-size:12px;color:var(--text-secondary)">当前已筛选：仅显示含此实体的年份</div>';
+    h+='<div class="ev-y">';
+    years.forEach(function(y){
+      var item=gL(y),refs=idx&&idx.refs[y]||[];
+      if(!item)return;
+      h+='<div class="ev-c"><div class="ev-ch" data-year="'+y+'"><span class="ev-yb">'+y+'</span><span class="ev-yt">'+esc(item.title)+'</span><span class="ev-ar">→</span></div>';
+      var shown=0;
+      refs.forEach(function(pi){
+        if(shown>=2)return;
+        var txt=item.paragraphs[pi];
+        h+='<div class="ev-p" data-year="'+y+'" data-pi="'+pi+'"><span class="ev-pl">#'+(pi+1)+'</span>…'+esc(ctx(txt,info.data.kw[0],65))+'</div>';
+        shown++;
+      });
+      h+='</div>';
+    });
+    h+='</div>';
+  }else{
+    h+='<div class="se"><p>暂未匹配到相关年份</p></div>';
+  }
+  h+='</div>';
+  D.ct.innerHTML=h;
+  D.ct.scrollTop=0;
+  D.ct.querySelectorAll('.ev-ch').forEach(function(el){el.addEventListener('click',function(){showContent(Number(el.dataset.year))})});
+  D.ct.querySelectorAll('.ev-p').forEach(function(el){el.addEventListener('click',function(){
+    var y=Number(el.dataset.year),pi=Number(el.dataset.pi);
+    showContent(y);
+    setTimeout(function(){var pfx=getPfx(),p=$('.par[data-pid="'+pfx+y+'-'+pi+'"]',D.ct);if(p){p.scrollIntoView({behavior:'smooth',block:'center'});p.style.transition='background .5s';p.style.background='rgba(201,168,76,0.18)';setTimeout(function(){p.style.background=''},1500)}},100)})});
+}
+
+function renderBookmarks(){
+  var b=ST.bm(),e=Object.keys(b).filter(function(k){return k.startsWith(getPfx())});
+  if(!e.length){D.bL.innerHTML='<div class="be">暂无书签</div>';return}
+  var items=e.map(function(id){return b[id]});items.sort(function(a,b){return b.y-a.y});
+  D.bL.innerHTML=items.map(function(bm){var nt=ST.getNT(bm.pid);return '<div class="bi" data-pid="'+bm.pid+'"><div>'+esc(bm.pr)+'</div><div class="by">'+bm.y+(nt?' · 📝':'')+'</div></div>'}).join('');
+  D.bL.querySelectorAll('.bi').forEach(function(el){el.addEventListener('click',function(){var raw=el.dataset.pid,r=raw.split('-'),y=Number(r[1]),pid=raw;showContent(y);setTimeout(function(){var p=$('.par[data-pid="'+pid+'"]',D.ct);if(p){p.scrollIntoView({behavior:'smooth',block:'center'});p.style.transition='background .3s';p.style.background='rgba(201,168,76,0.18)';setTimeout(function(){p.style.background=''},1500)}},100)})});
+}
+
+// ===== 阅读历史 =====
+function renderHistory(){
+  var hist=[];try{hist=JSON.parse(localStorage.getItem('bb_rh'))||[]}catch(e){}
+  if(!hist.length){D.hL.innerHTML='<div class="be">暂无阅读记录</div>';return}
+  D.hL.innerHTML=hist.map(function(h){
+    return '<div class="bi" data-year="'+h.year+'"><div>'+esc(h.title||h.year+'年')+'</div><div class="by">'+h.year+(h.at?' · '+new Date(h.at).toLocaleDateString('zh-CN',{month:'short',day:'numeric'}):'')+'</div></div>';
+  }).join('');
+  D.hL.querySelectorAll('.bi').forEach(function(el){el.addEventListener('click',function(){
+    showContent(Number(el.dataset.year))})});
+}
+
+// ===== 内容显示 =====
+function showContent(year){
+  var item=gL(year);if(!item)return;
+  currentYear=year;searchMode=false;D.sI.value='';
+  renderSidebar();
+  var bmk=ST.bm(),nts=ST.nt(),pfx=getPfx();
+
+  var metaHtml='';
+  if(mode==='meetings'&&item.date)metaHtml='<div class="meeting-meta">📅 '+item.date+'</div>';
+
+  var themesHtml='';
+  if(item.themes){
+    themesHtml=item.themes.map(function(t){var m=THEMES[t];return '<span class="ltt" style="background:'+(m?m.color:'#666')+'">'+t+'</span>'}).join('');
+  }
+
+  // 统计信息
+  var chars=0;item.paragraphs.forEach(function(p){chars+=p.length});
+  var mins=Math.max(1,Math.round(chars/400));
+  var statsHtml='<div class="lstats"><span>📄 '+item.paragraphs.length+' 段</span><span class="ls-d"></span><span>📝 '+chars+' 字</span><span class="ls-d"></span><span>⏱ ~'+mins+' 分钟</span></div>';
+
+  // 年份导航
+  var allYears=gF().slice().sort(function(a,b){return b.year-a.year});
+  var ci=allYears.findIndex(function(l){return l.year===year});
+  var prv=ci<allYears.length-1?allYears[ci+1].year:null;
+  var nxt=ci>0?allYears[ci-1].year:null;
+  var navHtml='<div class="ynav">'+
+    (prv?'<a class="yn-pr" data-year="'+prv+'"><span class="yn-ar">←</span><span class="yn-d"><div class="yn-em">上一年</div><div class="yn-yr">'+prv+'</div></span></a>':'<div></div>')+
+    (nxt?'<a class="yn-nx" data-year="'+nxt+'"><span class="yn-d"><div class="yn-em">下一年</div><div class="yn-yr">'+nxt+'</div></span><span class="yn-ar">→</span></a>':'<div></div>')+
+    '</div>';
+
+  D.ct.innerHTML='<div class="lv"><div class="lh"><h1>'+esc(item.title)+'</h1><div class="lm"><span class="lyb">'+item.year+'</span>'+themesHtml+'</div>'+metaHtml+(item.summary?'<div class="lsum"><span class="lsum-lb">📋 摘要</span><span class="lsum-ct">'+fmt(item.summary)+'</span></div>':'')+statsHtml+'</div>'+
+    item.paragraphs.map(function(t,i){
+      var pid=pfx+item.year+'-'+i,bb=!!bmk[pid],nn=!!nts[pid];
+      return '<div class="par'+(bb?' bm':'')+'" data-pid="'+pid+'"><div class="pa">'+
+        '<button class="bmb'+(bb?' act':'')+'" data-pid="'+pid+'">'+(bb?'★':'☆')+'</button>'+
+        '<button class="ntb'+(nn?' act':'')+'" data-pid="'+pid+'">📝</button></div>'+
+        '<div class="pt">'+fmt(t)+'</div>'+
+        (nn?'<div class="ni" data-pid="'+pid+'">📝 '+esc(nts[pid].c)+'</div>':'')+
+        '<div class="ne'+(nn?' vis':'')+'" data-pid="'+pid+'"><textarea placeholder="写笔记…">'+(nn?esc(nts[pid].c):'')+'</textarea>'+
+        '<div class="na"><button class="nc">取消</button><button class="ns">保存</button></div></div></div>';
+    }).join('')+navHtml+'</div>';
+
+  // 绑定事件
+  D.ct.querySelectorAll('.bmb').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();togBM(b.dataset.pid)})});
+  D.ct.querySelectorAll('.ntb').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();togNE(b.dataset.pid)})});
+  D.ct.querySelectorAll('.nc').forEach(function(b){b.addEventListener('click',function(){var pid=b.closest('.ne').dataset.pid;hideNE(pid)})});
+  D.ct.querySelectorAll('.ns').forEach(function(b){b.addEventListener('click',function(){var ed=b.closest('.ne'),pid=ed.dataset.pid;svNT(pid,ed.querySelector('textarea').value)})});
+  D.ct.querySelectorAll('.ne textarea').forEach(function(ta){ta.addEventListener('blur',function(){svNT(ta.closest('.ne').dataset.pid,ta.value)});ta.addEventListener('keydown',function(e){if(e.ctrlKey&&e.key==='Enter')svNT(ta.closest('.ne').dataset.pid,ta.value)})});
+  D.ct.querySelectorAll('.ni').forEach(function(el){el.addEventListener('click',function(){togNE(el.dataset.pid)})});
+  D.ct.querySelectorAll('.ynav a').forEach(function(el){el.addEventListener('click',function(){showContent(Number(el.dataset.year))})});
+
+  // 记录阅读历史
+  var hist=[];try{hist=JSON.parse(localStorage.getItem('bb_rh'))||[]}catch(e){}
+  hist=hist.filter(function(h){return h.year!==year});
+  hist.unshift({year:year,title:item.title,at:Date.now()});
+  if(hist.length>15)hist=hist.slice(0,15);
+  try{localStorage.setItem('bb_rh',JSON.stringify(hist))}catch(e){}
+  renderHistory();
+
+  var pv=ST.getPr(year);
+  if(D.prgBar)D.prgBar.style.width='0%';
+  if(pv)requestAnimationFrame(function(){D.ct.scrollTop=pv.st;if(D.prgBar&&D.ct.scrollHeight>D.ct.clientHeight){var pp=Math.min(pv.st/(D.ct.scrollHeight-D.ct.clientHeight)*100,100);if(pp<0)pp=0;D.prgBar.style.width=pp+'%'}});else D.ct.scrollTop=0;
+  renderBookmarks();
+}
+
+// ===== 书签 =====
+function togBM(pid){
+  var b=$('.bmb[data-pid="'+pid+'"]',D.ct);if(!b)return;
+  var r=pid.split('-'),y=Number(r[1]),pfx=r[0]+'-',i=Number(r[2]);
+  var data=getData(),item=data.find(function(l){return l.year===y});
+  if(!item||!item.paragraphs[i])return;
+  if(ST.isBM(pid)){ST.rmBM(pid);b.textContent='☆';b.classList.remove('act')}
+  else{ST.addBM(pid,y,item.paragraphs[i]);b.textContent='★';b.classList.add('act')}
+  var p=b.closest('.par');if(p)p.classList.toggle('bm');renderBookmarks();
+}
+
+// ===== 笔记 =====
+function togNE(pid){var ed=$('.ne[data-pid="'+pid+'"]',D.ct);if(!ed)return;if(ed.classList.contains('vis'))hideNE(pid);else showNE(pid)}
+function showNE(pid){$$('.ne.vis',D.ct).forEach(function(e){e.classList.remove('vis')});var ed=$('.ne[data-pid="'+pid+'"]',D.ct);if(ed){ed.classList.add('vis');ed.querySelector('textarea').focus()}}
+function hideNE(pid){var ed=$('.ne[data-pid="'+pid+'"]',D.ct);if(ed)ed.classList.remove('vis')}
+function svNT(pid,c){ST.setNT(pid,c);var b=$('.ntb[data-pid="'+pid+'"]',D.ct);if(b)b.classList.toggle('act',!!c.trim());var p=$('.par[data-pid="'+pid+'"]',D.ct);if(!p)return;var ex=p.querySelector('.ni');if(c.trim()){if(ex)ex.innerHTML='📝 '+esc(c.trim());else{var ind=document.createElement('div');ind.className='ni';ind.dataset.pid=pid;ind.innerHTML='📝 '+esc(c.trim());ind.addEventListener('click',function(){togNE(pid)});p.appendChild(ind)}}else{if(ex)ex.remove()}hideNE(pid)}
+
+// ===== 搜索 =====
+function onSearch(){
+  var q=D.sI.value;if(!q.trim()){clearSearch();return}
+  db(function(){if(!D.sI.value.trim()){clearSearch();return}performSearch(q)},300);
+}
+function performSearch(q){
+  if(D.prgBar)D.prgBar.style.width='0%';
+  var d=getData(),r=searchData(q,d);searchMode=true;
+  if(!r.length){D.ct.innerHTML='<div class="se"><p>未找到包含 <strong>“'+esc(q)+'”</strong> 的内容</p><p style="margin-top:12px;color:var(--text-muted);font-size:13px;">请尝试其他关键词</p></div>';return}
+  var t=0;r.forEach(function(x){t+=x.mc});
+  var h='<div class="sr"><h2>搜索结果：共 <span class="rc">'+r.length+' 项 / '+t+' 处匹配</span></h2>';
+  r.forEach(function(x){h+='<div class="srg"><div class="srh" data-idx="'+x.idx+'">'+esc(x.item.title)+'</div>';x.ps.forEach(function(p){var sn=ctx(p.t,q);h+='<div class="srm" data-idx="'+x.idx+'" data-pi="'+p.i+'">'+hl(sn,q)+'</div>'});h+='</div>'});
+  h+='</div>';D.ct.innerHTML=h;
+  D.ct.querySelectorAll('.srm').forEach(function(el){el.addEventListener('click',function(){var idx=Number(el.dataset.idx),pi=Number(el.dataset.pi),d=getData(),item=d[idx];if(item){searchMode=false;D.sI.value='';showContent(item.year);setTimeout(function(){var pfx=getPfx(),p=$('.par[data-pid="'+pfx+item.year+'-'+pi+'"]',D.ct);if(p){p.scrollIntoView({behavior:'smooth',block:'center'});p.style.transition='background .5s';p.style.background='rgba(201,168,76,0.18)';setTimeout(function(){p.style.background=''},1500)}},100)}})});
+  D.ct.querySelectorAll('.srh').forEach(function(el){el.addEventListener('click',function(){var d=getData(),item=d[Number(el.dataset.idx)];if(item){searchMode=false;D.sI.value='';showContent(item.year)}})});
+}
+function clearSearch(){searchMode=false;D.sI.value='';if(currentYear!==null)showContent(currentYear);else{var d=getData();if(d.length)showContent(d[d.length-1].year)}}
+
+// ===== 关系图 =====
+function renderRelations(){
+  D.stitle.textContent='🔗 关系图';
+  var h='<div class="rg"><div class="rg-b">'+
+    '<div class="rg-av" id="rg-buffett"><img src="portraits/buffett.jpg" onload="this.style.display=\'block\';document.getElementById(\'rg-buffett\').querySelector(\'.rg-bi\').style.display=\'none\'" onerror="this.style.display=\'none\'" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%">'+
+    '<span class="rg-bi" style="font-size:28px">🧑</span></div>'+
+    '<h2>沃伦·巴菲特</h2><p>1930年生于奥马哈，伯克希尔·哈撒韦董事长兼CEO，被尊称为「奥马哈先知」。以下是与他关系最密切的16位人物。</p></div>';
+  var cats=Object.keys(RELATIONS);
+  cats.forEach(function(cat){
+    var m=RELATIONS[cat];
+    h+='<div class="rg-g"><div class="rg-gh"><span style="color:'+m.color+'">'+cat+'</span></div><div class="rg-row">';
+    h+=m.items.map(function(item){
+      var name=item.name;
+      var init=name.charAt(0);
+      var imgSrc=item.img?('portraits/'+esc(item.img)):'';
+      return '<div class="rg-n" data-entity="'+esc(name)+'" style="border-left:3px solid '+m.color+'">'+
+        (imgSrc?'<div class="rg-av"><img src="'+imgSrc+'" onload="this.style.display=\'block\';this.nextElementSibling.style.display=\'none\'" onerror="this.style.display=\'none\'" alt="">'+
+        '<span class="rg-in" style="background:'+m.color+'20;color:'+m.color+'">'+esc(init)+'</span></div>'
+        :'<div class="rg-av"><span class="rg-in" style="background:'+m.color+'20;color:'+m.color+'">'+esc(init)+'</span></div>')+
+        '<div class="rg-txt"><div class="rg-nm" style="color:'+m.color+'">'+esc(name)+'</div>'+
+        '<div class="rg-nr">'+esc(item.rel)+'</div></div></div>';
+    }).join('');
+    h+='</div></div>';
+  });
+  h+='</div>';
+  D.ct.innerHTML=h;
+  D.ct.querySelectorAll('.rg-n').forEach(function(el){
+    el.addEventListener('click',function(){showEntity(el.dataset.entity)});
+  });
+}
+
+// ===== 统计 =====
+function updateStats(){
+  D.stL.textContent=LETTERS.length;D.stM.textContent=MEETINGS.length;D.stT.textContent=Object.keys(THEMES).length;
+}
+
+// ===== 初始化 =====
+function init(){
+  iD();loadTheme();
+  renderSidebar();renderThemeFilter();renderEntityFilter();renderBookmarks();renderHistory();updateStats();
+
+  // 默认显示 letters（必须在 restoreSections 之前，确保内容已渲染）
+  switchMode('letters');
+  restoreSections();
+
+  // Tab 切换
+  D.tab.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){switchMode(t.dataset.mode)})});
+
+  // 主题切换
+  D.thBtn.addEventListener('click',toggleTheme);
+
+  // 随机阅读
+  D.randBtn.addEventListener('click',function(){
+    var pool=gF();if(!pool.length)return;
+    var item=pool[Math.floor(Math.random()*pool.length)];
+    if(searchMode)clearSearch();showContent(item.year)});
+
+  // 手机菜单
+  var hmBtn=$('#hm-btn'),sbOv=$('#sb-ov'),sb=$('#sb');
+  function toggleSb(){sb.classList.toggle('open');if(sbOv)sbOv.classList.toggle('open')}
+  function closeSb(){sb.classList.remove('open');if(sbOv)sbOv.classList.remove('open')}
+  if(hmBtn)hmBtn.addEventListener('click',toggleSb);
+  if(sbOv)sbOv.addEventListener('click',toggleSb);
+  // 侧边栏内点击后自动关闭（手机端）
+  if(sb)sb.addEventListener('click',function(e){if(!e.target.closest('.sbs-hd,.tf-clr'))setTimeout(closeSb,200)});
+
+  // 回顶
+  D.btt.addEventListener('click',function(){D.ct.scrollTo({top:0,behavior:'smooth'})});
+
+  // 侧边栏折叠
+  document.querySelectorAll('.sbs-hd').forEach(function(el){el.addEventListener('click',function(){
+    toggleSection(el.closest('.sbs').id)})});
+
+  // 搜索
+  D.sI.addEventListener('input',onSearch);
+  D.sI.addEventListener('keydown',function(e){if(e.key==='Escape')clearSearch()});
+
+  // 快捷键
+  document.addEventListener('keydown',function(e){
+    if((e.ctrlKey||e.metaKey)&&e.key==='f'){e.preventDefault();D.sI.focus()}
+    if(!searchMode&&!e.ctrlKey&&!e.metaKey){
+      if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();var f=gF().slice().sort(function(a,b){return b.year-a.year});var idx=f.findIndex(function(l){return l.year===currentYear});if(idx===-1)return;var n=e.key==='ArrowDown'?Math.min(idx+1,f.length-1):Math.max(idx-1,0);if(n!==idx)showContent(f[n].year)}
+    }
+  });
+
+  // 滚动保存 & 进度条 & 回顶
+  D.ct.addEventListener('scroll',function(){
+    if(currentYear!==null&&!searchMode)ST.svPr(currentYear,D.ct.scrollTop);
+    // 阅读进度条
+    if(D.prgBar&&!searchMode){
+      var p=Math.min(D.ct.scrollTop/(D.ct.scrollHeight-D.ct.clientHeight)*100,100);
+      if(p<0)p=0;D.prgBar.style.width=p+'%';
+    }
+    // 回顶按钮
+    if(D.btt)D.btt.classList.toggle('vis',D.ct.scrollTop>300);
+  });
+
+  // 清理书签
+  var all=new Set();
+  LETTERS.forEach(function(l){l.paragraphs.forEach(function(_,i){all.add('L-'+l.year+'-'+i)})});
+  MEETINGS.forEach(function(m){m.paragraphs.forEach(function(_,i){all.add('M-'+m.year+'-'+i)})});
+  ST.cln(all);
+
+  // 窗口重新聚焦时重绘图表
+  window.addEventListener('focus',function(){if(mode==='knowledgegraph'&&kgChart)setTimeout(function(){kgChart.resize()},100)});
+
+  // 高亮术语点击 → 跳转详情页（事件委托）
+  D.ct.addEventListener('click',function(e){
+    var t=e.target;
+    var t=e.target.closest('.hl-term,.hl-ent');if(t)tryShowEntity(t.textContent);
+  });
+}
+
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
